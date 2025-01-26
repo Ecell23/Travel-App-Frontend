@@ -1,109 +1,131 @@
 import 'package:flutter/material.dart';
+import 'package:travel_app/utils/utils/widgets/custom_background/custom_background.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/background.jpg', // Replace with your background image path
-              fit: BoxFit.cover, // Ensures the image covers the entire screen
-            ),
-          ),
-          // Content overlay
-          Positioned.fill(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0), // Padding around the content
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start, // Align content to the left
-                children: [
-                  SizedBox(height: 50), // Space from the top
-
-                  // Login Header
-                  Row(
+      body: CustomBackground( // Using the custom background widget
+        child: SingleChildScrollView( // Pass the content using the child parameter
+          child: Stack(
+            children: [
+              // Main content
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start, // Align items at the top
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Icon(Icons.arrow_back, color: Colors.white), // Back arrow
-                      SizedBox(width: 8),
-                      Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      // Space for the "LogIn" button at the top left
+                      SizedBox(height: 150), // Adjust space for the "LogIn" button
+
+                      // Forgot Your Password? Text aligned left
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Forgot Your Password?',
+                          style: TextStyle(
+                            fontSize: 46, // Increased font size
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black.withOpacity(0.6), // Reduced opacity
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 120), // Increased gap
+
+                      // Provide your email/contact number text
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Provide your email / contact number',
+                          style: TextStyle(
+                            fontSize: 14, // Adjust font size
+                            color: Colors.black54, // Muted color
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 10), // Space between label and text field
+
+                      // Email/Contact Number TextField
+                      TextField(
+                        decoration: InputDecoration(
+                          hintText: 'E-Mail / Contact Number',
+                          filled: true,
+                          fillColor: Colors.teal.withOpacity(0.7),
+                          hintStyle: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                        style: TextStyle(color: Colors.white),
+                      ),
+
+                      SizedBox(height: 40), // Gap between fields
+
+                      // Verification Message Button
+                      ElevatedButton(
+                        onPressed: () {
+                          // Add action here
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange.withOpacity(0.9),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          elevation: 10, // Shadow effect
+                          shadowColor: Colors.black.withOpacity(0.4), // Shadow color
+                        ),
+                        child: Center(
+                          child: Text(
+                            'CLICK TO GET A VERIFICATION MESSAGE',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 30), // Space below the header
+                ),
+              ),
 
-                  // First TextField with icon
-                  TextField(
-                    style: TextStyle(color: Colors.black), // Text color
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white.withOpacity(0.9), // White background with slight transparency
-                      hintText: 'Enter your email',
-                      hintStyle: TextStyle(color: Colors.grey),
-                      prefixIcon: Icon(
-                        Icons.email,
-                        color: Colors.grey,
-                      ), // Left icon inside the text box
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12.0), // Rounded corners
-                        borderSide: BorderSide.none, // No border
-                      ),
+              // LogIn Button on the top left corner
+              Positioned(
+                top: 40,
+                left: 16,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.arrow_back, color: Colors.black),
+                      onPressed: () {
+                        Navigator.pop(context); // Go back to the previous page
+                      },
                     ),
-                  ),
-                  SizedBox(height: 30), // Space below the first text box
-
-                  // "Forgot Your Password?" Text Box
-                  Container(
-                    width: double.infinity, // Takes full width
-                    padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0), // Padding inside
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.9), // White background
-                      borderRadius: BorderRadius.circular(12.0), // Rounded corners
-                    ),
-                    child: Text(
-                      'Forgot Your Password?',
+                    SizedBox(width: 8),
+                    Text(
+                      'LogIn',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
                       ),
                     ),
-                  ),
-
-                  SizedBox(height: 30), // Space below the text box
-
-                  // Reset Button
-                  Center(
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        primary: Colors.blue, // Button color
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.0), // Rounded button
-                        ),
-                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16), // Button size
-                      ),
-                      onPressed: () {
-                        // Handle reset password action
-                        print('Reset password button clicked');
-                      },
-                      child: Text(
-                        'Reset Password',
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

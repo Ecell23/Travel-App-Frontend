@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/utils/utils/widgets/custom_background/custom_background.dart';
+import 'package:travel_app/widgets/custom_background/custom_background.dart';
 
-class LoginPage extends StatelessWidget {
+class SignupPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,7 +23,7 @@ class LoginPage extends StatelessWidget {
                       },
                     ),
                     Text(
-                      'Get Started',
+                      'LogIn',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -36,7 +36,7 @@ class LoginPage extends StatelessWidget {
 
                 // Welcome Back Text
                 Text(
-                  'Welcome Back!',
+                  'Enter Your Details!',
                   style: TextStyle(
                     fontSize: 46,
                     fontWeight: FontWeight.bold,
@@ -82,25 +82,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   style: TextStyle(color: Colors.white),
                 ),
-                SizedBox(height: 10), // Space below password field
-
-                // Forgot Password Link
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    onTap: () {
-                      // Navigate to Forgot Password Page
-                    },
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
+                 // Space below password field
                 SizedBox(height: 30), // Space below the forgot password link
 
                 // Buttons Row
@@ -171,7 +153,7 @@ class LoginPage extends StatelessWidget {
                         ),
                         children: [
                           TextSpan(
-                            text: 'SignUp',
+                            text: 'LogIn',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,

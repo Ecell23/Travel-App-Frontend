@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/utils/utils/widgets/custom_background/custom_background.dart';
+import 'package:travel_app/widgets/custom_background/custom_background.dart';
 
 class OtpverificationPage extends StatelessWidget {
   @override

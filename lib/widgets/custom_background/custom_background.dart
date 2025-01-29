@@ -21,10 +21,10 @@ class CustomBackground extends StatelessWidget {
           ),
           // Top Ellipse with the adjusted layout and opacity using custom Path
           Positioned(
-            left: -370.12, // Original left position
-            top: -216,    // Original top position
+            left: -280.12, // Original left position
+            top: -236,    // Original top position
             child: Transform.rotate(
-              angle: -185 * (3.14159 / 180), // -143 degrees rotation
+              angle: -175 * (3.14159 / 180), // -143 degrees rotation
               child: ClipPath(
                 clipper: SteepEllipseClipper(),
                 child: Container(
@@ -37,8 +37,8 @@ class CustomBackground extends StatelessWidget {
           ),
           // Bottom Ellipse with adjusted layout and opacity using custom Path
           Positioned(
-            left: 0.3,  // Original left position
-            top: 700,   // Original top position
+            left: 1,  // Original left position
+            top: 600,   // Original top position
             child: Transform.rotate(
               angle: 165 * (3.14159 / 180), // -143 degrees rotation
               child: ClipPath(

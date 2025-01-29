@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/Pages/homepage/home_page.dart';
+import 'package:travel_app/pages/pages.dart';
+
 void main() {
   runApp(MyApp());
 }
@@ -12,7 +13,16 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(), // Set your custom HomePage here
+      initialRoute: '/otpVerification', // Set the splash screen as initial route
+      routes: {
+        SplashScreen.routeName: (context) => SplashScreen(), // Add splash screen route
+        '/welcome': (context) => WelcomePage(),
+        '/login': (context) => LoginPage(),
+        '/signup': (context) => SignupPage(),
+        '/forgotPassword': (context) => ForgotPasswordPage(),
+        '/otpVerification': (context) => OtpverificationPage(),
+      },
+      debugShowCheckedModeBanner: false, // Disable debug banner
     );
   }
 }

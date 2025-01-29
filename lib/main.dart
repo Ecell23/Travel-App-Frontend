@@ -18,7 +18,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/forgotPassword',  // Set the splash screen as initial route
+      initialRoute: '/splash',  // Set the splash screen as initial route
+
       routes: {
         '/splash': (context) => SplashScreen(),  // Add splash screen route
         '/welcome': (context) => WelcomePage(),

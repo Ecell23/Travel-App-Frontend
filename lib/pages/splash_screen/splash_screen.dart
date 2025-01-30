@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/pages/pages.dart';
+import 'package:travel_app/pages/welcome_page/welcome_page.dart';
 
 class SplashScreen extends StatelessWidget {
-  static const String routeName = '/splash';
-
   @override
   Widget build(BuildContext context) {
     // Show the splash screen for 3 seconds before navigating
@@ -32,8 +30,7 @@ class SplashScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(bottom: 40.0),
               child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(
-                    Colors.orange), // Customize the color if needed
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.orange), // Customize the color if needed
               ),
             ),
           ),

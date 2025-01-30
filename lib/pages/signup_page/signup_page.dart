@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/widgets/custom_background/custom_background.dart';
+import 'package:travel_app/utils/widgets/custom_background/custom_background.dart';
 
-class SignupPage extends StatelessWidget {
+class SignupPage extends StatefulWidget {
+  @override
+  _SignupPageState createState() => _SignupPageState();
+}
+
+class _SignupPageState extends State<SignupPage> {
+  bool _isPasswordHidden = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +20,7 @@ class SignupPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(height: 40), // Space from the top
-                // Top back button with "Get Started" text
+                // Top back button with "Signup" text
                 Row(
                   children: [
                     IconButton(
@@ -23,7 +30,7 @@ class SignupPage extends StatelessWidget {
                       },
                     ),
                     Text(
-                      'LogIn',
+                      'Signup',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -34,7 +41,7 @@ class SignupPage extends StatelessWidget {
                 ),
                 SizedBox(height: 40), // Space below top section
 
-                // Welcome Back Text
+                // Welcome Text
                 Text(
                   'Enter Your Details!',
                   style: TextStyle(
@@ -52,48 +59,58 @@ class SignupPage extends StatelessWidget {
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.7),
                     hintStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.7),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  cursorColor: Colors.white,
                 ),
                 SizedBox(height: 20), // Space below email field
 
-                // Password TextField
+                // Password TextField with Visibility Toggle
                 TextField(
-                  obscureText: true,
+                  obscureText: _isPasswordHidden,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.7),
                     hintStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.7),
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide.none,
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordHidden = !_isPasswordHidden;
+                        });
+                      },
+                    ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                  cursorColor: Colors.white,
                 ),
-                 // Space below password field
-                SizedBox(height: 30), // Space below the forgot password link
+                SizedBox(height: 30), // Space below the password field
 
                 // Buttons Row
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // Click to Login Button
+                    // Click to Signup Button
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle Login Action
+                          // Handle Signup Action
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
@@ -103,7 +120,7 @@ class SignupPage extends StatelessWidget {
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                         ),
                         child: Text(
-                          'CLICK TO LOGIN',
+                          'CLICK TO SIGNUP',
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
@@ -138,22 +155,22 @@ class SignupPage extends StatelessWidget {
                 ),
                 SizedBox(height: 20), // Space below buttons
 
-                // Don't have an account? Tap to SignUp
+                // Already have an account? Login
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      // Navigate to SignUp Page
+                      // Navigate to Login Page
                     },
                     child: RichText(
                       text: TextSpan(
-                        text: "Don't have an account? ",
+                        text: "Have an account already? ",
                         style: TextStyle(
                           color: Colors.black,
                           fontSize: 14,
                         ),
                         children: [
                           TextSpan(
-                            text: 'LogIn',
+                            text: 'Log In',
                             style: TextStyle(
                               color: Colors.black,
                               fontWeight: FontWeight.bold,

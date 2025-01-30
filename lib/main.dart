@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/pages/pages.dart';
+import 'package:travel_app/pages/forgot_password_page/forgot_password.dart';
+import 'package:travel_app/pages/login_page/login_page.dart';
+import 'package:travel_app/pages/signup_page/signup_page.dart';
+import 'package:travel_app/pages/otp_verification_page/otp_verification.dart';
+import 'package:travel_app/pages/welcome_page/welcome_page.dart';
+import 'package:travel_app/pages/splash_screen/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,9 +18,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/otpVerification', // Set the splash screen as initial route
+      initialRoute: '/splash',  // Set the splash screen as initial route
+
       routes: {
-        SplashScreen.routeName: (context) => SplashScreen(), // Add splash screen route
+        '/splash': (context) => SplashScreen(),  // Add splash screen route
         '/welcome': (context) => WelcomePage(),
         '/login': (context) => LoginPage(),
         '/signup': (context) => SignupPage(),

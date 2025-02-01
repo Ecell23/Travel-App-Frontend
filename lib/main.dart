@@ -5,6 +5,7 @@ import 'package:travel_app/pages/signup_page/signup_page.dart';
 import 'package:travel_app/pages/otp_verification_page/otp_verification.dart';
 import 'package:travel_app/pages/welcome_page/welcome_page.dart';
 import 'package:travel_app/pages/splash_screen/splash_screen.dart';
+import 'package:travel_app/pages/filter_page/filter_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/splash',  // Set the splash screen as initial route
+      initialRoute: '/filter',  // Set the splash screen as initial route
 
       routes: {
         '/splash': (context) => SplashScreen(),  // Add splash screen route
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
         '/signup': (context) => SignupPage(),
         '/forgotPassword': (context) => ForgotPasswordPage(),
         '/otpVerification': (context) => OtpverificationPage(),
+        '/filter':(context)=> FilterPage(),
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/utils/utils/widgets/custom_background/custom_background.dart';
+import 'package:travel_app/utils/widgets/custom_background/custom_background.dart';
 
 class OtpverificationPage extends StatelessWidget {
   @override
@@ -24,7 +24,7 @@ class OtpverificationPage extends StatelessWidget {
                       },
                     ),
                     Text(
-                      'LogIn',
+                      'OTP',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -47,16 +47,11 @@ class OtpverificationPage extends StatelessWidget {
                 SizedBox(height: 150), // Space below heading
 
                 // OTP TextFields
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    6,
-                        (index) => OTPTextField(), // Reusable OTPTextField widget
-                  ),
-                ),
+                OTPInputField(), // Updated OTP field with auto-focus
+
                 SizedBox(height: 50), // Space below OTP fields
 
-                // GET OTP Button
+                // VERIFY OTP Button
                 ElevatedButton(
                   onPressed: () {
                     // Add your action here
@@ -79,7 +74,7 @@ class OtpverificationPage extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(height: 20), // Space below "GET OTP" button
+                SizedBox(height: 20), // Space below "VERIFY OTP" button
 
                 // CLICK TO RESEND Button
                 ElevatedButton(
@@ -114,56 +109,70 @@ class OtpverificationPage extends StatelessWidget {
 }
 
 // Reusable OTP TextField Widget
-class OTPTextField extends StatefulWidget {
+class OTPInputField extends StatefulWidget {
   @override
-  _OTPTextFieldState createState() => _OTPTextFieldState();
+  _OTPInputFieldState createState() => _OTPInputFieldState();
 }
 
-class _OTPTextFieldState extends State<OTPTextField> {
-  FocusNode _focusNode = FocusNode(); // FocusNode to track focus state
-  bool _isFocused = false; // To manually track focus state
-
-  @override
-  void initState() {
-    super.initState();
-    // Add listener to update the state when the focus changes
-    _focusNode.addListener(() {
-      setState(() {
-        _isFocused = _focusNode.hasFocus;
-      });
-    });
-  }
+class _OTPInputFieldState extends State<OTPInputField> {
+  final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
+  final List<TextEditingController> _controllers =
+  List.generate(6, (index) => TextEditingController());
 
   @override
   void dispose() {
-    _focusNode.dispose(); // Dispose of the FocusNode when the widget is removed
+    for (var node in _focusNodes) {
+      node.dispose();
+    }
+    for (var controller in _controllers) {
+      controller.dispose();
+    }
     super.dispose();
+  }
+
+  void _onChanged(String value, int index) {
+    if (value.isNotEmpty) {
+      if (index < 5) {
+        FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
+      } else {
+        _focusNodes[index].unfocus(); // Hide keyboard after the last digit
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 40, // Fixed width for each OTP field
-      child: TextField(
-        focusNode: _focusNode,
-        keyboardType: TextInputType.number,
-        textAlign: TextAlign.center,
-        maxLength: 1, // Limit to one character
-        decoration: InputDecoration(
-          counterText: "", // Removes the character counter below the field
-          filled: true,
-          fillColor: _isFocused
-              ? Colors.teal // Highlighted when focused
-              : Colors.teal.withOpacity(0.5), // Light when not focused
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(8.0),
-            borderSide: BorderSide.none,
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(
+        6,
+            (index) => SizedBox(
+          width: 40, // Fixed width for each OTP field
+          child: TextField(
+            controller: _controllers[index],
+            focusNode: _focusNodes[index],
+            keyboardType: TextInputType.number,
+            textAlign: TextAlign.center,
+            maxLength: 1, // Limit to one character
+            cursorColor: Colors.white, // White cursor
+            onChanged: (value) => _onChanged(value, index),
+            decoration: InputDecoration(
+              counterText: "", // Removes the character counter below the field
+              filled: true,
+              fillColor: _focusNodes[index].hasFocus
+                  ? Colors.teal // Highlighted when focused
+                  : Colors.teal.withOpacity(0.5), // Light when not focused
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8.0),
+                borderSide: BorderSide.none,
+              ),
+            ),
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        style: TextStyle(
-          fontSize: 18,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
         ),
       ),
     );

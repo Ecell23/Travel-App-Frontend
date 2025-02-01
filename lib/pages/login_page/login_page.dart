@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/utils/utils/widgets/custom_background/custom_background.dart';
+import 'package:travel_app/utils/widgets/custom_background/custom_background.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _isPasswordHidden = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,40 +54,59 @@ class LoginPage extends StatelessWidget {
 
                 // Email/Contact Number TextField
                 TextField(
+                  cursorColor: Colors.white,
                   decoration: InputDecoration(
                     hintText: 'E-Mail / Contact Number',
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.7),
                     hintStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.7),
+                      fontWeight: FontWeight.w400,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide.none,
                     ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 20), // Space below email field
 
-                // Password TextField
+                // Password TextField with Visibility Toggle
                 TextField(
-                  obscureText: true,
+                  obscureText: _isPasswordHidden,
+                  cursorColor: Colors.white,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.7),
                     hintStyle: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      color: Colors.white.withOpacity(0.7),
+                      fontWeight: FontWeight.w400,
                     ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12.0),
                       borderSide: BorderSide.none,
                     ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordHidden ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.white.withOpacity(0.7),
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordHidden = !_isPasswordHidden;
+                        });
+                      },
+                    ),
                   ),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 SizedBox(height: 10), // Space below password field
 

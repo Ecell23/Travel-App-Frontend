@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/Pages/welcomepage/welcomepage.dart';
+import 'package:travel_app/pages/welcome_page/welcome_page.dart';
 
 class SplashScreen extends StatelessWidget {
   @override

@@ -1,12 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(MaterialApp(
-    home: FilterPage(),
-    debugShowCheckedModeBanner: false,
-  ));
-}
-
 class FilterPage extends StatefulWidget {
   @override
   _FilterPageState createState() => _FilterPageState();
@@ -46,19 +39,6 @@ class _FilterPageState extends State<FilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFE8ECF4),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Color(0xFF1CC0A0),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        showUnselectedLabels: true,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.card_travel), label: "My Trips"),
-          BottomNavigationBarItem(icon: Icon(Icons.map), label: "Maps"),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: "Bookings"),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: "Profile"),
-        ],
-      ),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
@@ -132,21 +112,37 @@ class _FilterPageState extends State<FilterPage> {
         GridView.count(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          crossAxisCount: 2,
-          childAspectRatio: 4,
+          crossAxisCount: 2, // Keep 2 columns
+          childAspectRatio: 3, // Increase row height for multiline text
+          crossAxisSpacing: 10, // Add spacing between items
+          mainAxisSpacing: 10, // Add vertical spacing
           children: options.map((option) {
-            return Row(
-              children: [
-                Checkbox(
-                  value: selectedFilters[option],
-                  onChanged: (bool? value) {
-                    setState(() {
-                      selectedFilters[option] = value ?? false;
-                    });
-                  },
-                ),
-                Expanded(child: Text(option)),
-              ],
+            return Container(
+              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4), // Padding for better spacing
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start, // Align text at the top
+                children: [
+                  Checkbox(
+                    value: selectedFilters[option],
+                    onChanged: (bool? value) {
+                      setState(() {
+                        selectedFilters[option] = value ?? false;
+                      });
+                    },
+                  ),
+                  Expanded(
+                    child: Text(
+                      option,
+                      style: TextStyle(fontSize: 14),
+                      maxLines: 2, // Allow multi-line text
+                      overflow: TextOverflow.visible, // Ensure text is fully displayed
+                    ),
+                  ),
+                ],
+              ),
             );
           }).toList(),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travel_app/pages/pages.dart';
+
 import 'config/theme.dart';
 
 void main() {
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         '/forgotPassword': (context) => ForgotPasswordPage(),
         '/otpVerification': (context) => OtpverificationPage(),
         '/homepage': (context) => Homepage(),
+        '/filterpage':(context)=>FilterPage(),
         '/searchPage' : (context) => SearchPage()
       },
       debugShowCheckedModeBanner: false, // Disable debug banner

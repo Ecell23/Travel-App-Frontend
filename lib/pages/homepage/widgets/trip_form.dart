@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class TripForm extends StatelessWidget {
+class TripForm extends StatefulWidget {
   const TripForm({
     super.key,
-    required this.locations,
   });
 
-  final List<List<String>> locations;
+  @override
+  State<TripForm> createState() => _TripFormState();
+}
+
+class _TripFormState extends State<TripForm> {
+  List<String> locations = [ 'Gangtok','Shimla'];
+  int guestCount = 1;
+  DateTime selectedDate = DateTime.now();
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +49,14 @@ class TripForm extends StatelessWidget {
               Column(
                   spacing: 15,
                   children: List.generate(locations.length, (index) => GestureDetector(
-                    onTap: (){},
+                    onTap: () async {
+                      String? result = await Navigator.pushNamed(context, '/searchPage') as String?;
+                      if(result!=null){
+                        setState(() {
+                          locations[index] = result;
+                        });
+                      }
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.surface,
@@ -47,16 +74,30 @@ class TripForm extends StatelessWidget {
                               color:
                               Theme.of(context).colorScheme.onSurface,
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(locations[index][0],
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
-                                ),
-                                Text(locations[index][1],
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
-                                ),
-                              ],
+                            Expanded(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(index==0? "FROM" : "LOCATION $index",
+                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                                      ),
+                                      Text(locations[index],
+                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
+                                      ),
+                                    ],
+                                  ),
+                                  index>0 && locations.length>2? IconButton(onPressed: (){
+                                    setState(() {
+                                      locations.removeAt(index);
+                                    });
+                                  },
+                                      icon: Icon(Icons.delete_outline,size: 30,)
+                                  ) : SizedBox(),
+                    ],
+                              ),
                             )
                           ],
                         ),
@@ -67,7 +108,14 @@ class TripForm extends StatelessWidget {
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      String? result = await Navigator.pushNamed(context, '/searchPage') as String?;
+                      if(result!=null){
+                        setState(() {
+                          locations.add(result);
+                        });
+                      }
+                    },
                     style: ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.primary),
                         shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
@@ -82,7 +130,7 @@ class TripForm extends StatelessWidget {
                 children: [
                   Expanded(
                     child: GestureDetector(
-                      onTap: () {},
+                      onTap: () => _selectDate(context),
                       child: Container(
                         decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
@@ -106,7 +154,7 @@ class TripForm extends StatelessWidget {
                                   Text('START AT',
                                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                   ),
-                                  Text('20 July',
+                                  Text(DateFormat.MMMd().format(selectedDate.toLocal()),
                                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
                                   ),
                                 ],
@@ -143,8 +191,32 @@ class TripForm extends StatelessWidget {
                                   Text('GUESTS  ',
                                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                   ),
-                                  Text('1',
-                                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
+                                  Row(
+                                    children: [
+                                      GestureDetector(
+                                          onTap: (){
+                                            if(guestCount>1){
+                                              setState(() {
+                                                guestCount--;
+                                              });
+                                            }
+                                          },
+                                          child: Icon(Icons.remove)
+                                      ),
+                                      SizedBox(width: 5,),
+                                      Text(guestCount.toString(),
+                                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
+                                      ),
+                                      SizedBox(width: 5,),
+                                      GestureDetector(
+                                          onTap: (){
+                                            setState(() {
+                                              guestCount++;
+                                            });
+                                          },
+                                          child: Icon(Icons.add)
+                                      ),
+                                    ],
                                   ),
                                 ],
                               )

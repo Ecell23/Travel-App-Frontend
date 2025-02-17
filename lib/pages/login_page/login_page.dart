@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:travel_app/widgets/custom_background/custom_background.dart';
+import 'package:http/http.dart' as http;
+
+import '../../config/constants.dart';
+import '../../models/user.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,6 +14,45 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isPasswordHidden = true;
+  String? _isNotvalid ;
+  bool pendingrequest = false;
+  TextEditingController emailcontroller = TextEditingController();
+  TextEditingController passwordcontroller = TextEditingController();
+
+  void loginUser() async {
+    setState(() {
+      pendingrequest = true;
+    });
+    var reqBody = {
+      "email":emailcontroller.text,
+      "password":passwordcontroller.text
+    };
+    try{
+      http.Response res = await http.post(
+        Uri.parse('${Constants.uri}/api/user/login'),
+        body: jsonEncode(reqBody),
+        headers: <String,String>{
+          'Content-Type' : 'application/json; charset=UTF-8',
+        },
+      );
+      if(res.statusCode==200){
+        print(jsonDecode(res.body));
+        User user = User.fromJson(jsonDecode(res.body)["user"]);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
+        Navigator.pushNamedAndRemoveUntil(context, '/homepage',(Route<dynamic> route) => false);
+      } else {
+        _isNotvalid = res.body;
+      }
+    }
+    catch(e){
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection Failed")));
+    }
+
+    setState(() {
+      pendingrequest = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +99,14 @@ class _LoginPageState extends State<LoginPage> {
 
                 // Email/Contact Number TextField
                 TextField(
+                  controller: emailcontroller,
                   cursorColor: Colors.white,
                   decoration: InputDecoration(
-                    hintText: 'E-Mail / Contact Number',
+                    errorText: _isNotvalid,
+                    errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.error)
+                    ),
+                    hintText: 'E-Mail',
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.7),
                     hintStyle: TextStyle(
@@ -72,14 +122,29 @@ class _LoginPageState extends State<LoginPage> {
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
+                  onChanged: (_) {
+                    setState(() {
+                      _isNotvalid = null;
+                    });
+                  },
                 ),
                 SizedBox(height: 20), // Space below email field
 
                 // Password TextField with Visibility Toggle
                 TextField(
+                  controller: passwordcontroller,
                   obscureText: _isPasswordHidden,
                   cursorColor: Colors.white,
+                  onChanged: (_) {
+                    setState(() {
+                      _isNotvalid = null;
+                    });
+                  },
                   decoration: InputDecoration(
+                    errorText: _isNotvalid,
+                    errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Theme.of(context).colorScheme.error)
+                    ),
                     hintText: 'Password',
                     filled: true,
                     fillColor: Colors.teal.withOpacity(0.7),
@@ -115,7 +180,7 @@ class _LoginPageState extends State<LoginPage> {
                   alignment: Alignment.centerLeft,
                   child: GestureDetector(
                     onTap: () {
-                      // Navigate to Forgot Password Page
+                      Navigator.pushNamed(context, '/forgotPassword');
                     },
                     child: Text(
                       'Forgot Password?',
@@ -136,8 +201,8 @@ class _LoginPageState extends State<LoginPage> {
                     // Click to Login Button
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: () {
-                          // Handle Login Action
+                        onPressed: pendingrequest? (){} : () {
+                          loginUser();
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange,
@@ -146,7 +211,14 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           padding: EdgeInsets.symmetric(vertical: 16.0),
                         ),
-                        child: Text(
+                        child: pendingrequest? SizedBox(
+                          height: 25,
+                          width: 25,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            backgroundColor: Colors.orange,
+                          ),
+                        ) : Text(
                           'CLICK TO LOGIN',
                           style: TextStyle(
                             color: Colors.white,
@@ -160,7 +232,7 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle Skip Action
+                          Navigator.pushNamedAndRemoveUntil(context, '/homepage',(Route<dynamic> route) => false);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.orange.withOpacity(0.7),
@@ -186,7 +258,7 @@ class _LoginPageState extends State<LoginPage> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      // Navigate to SignUp Page
+                      Navigator.pushNamed(context, '/signup');
                     },
                     child: RichText(
                       text: TextSpan(

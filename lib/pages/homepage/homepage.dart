@@ -11,7 +11,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  List<List<String>> locations = [['FROM' , 'Gangtok'],['TO' , 'Shimla']];
   List<List<dynamic>> services = [[Icons.hotel, 'Hotels'],[Icons.flight , 'Flights'],[Icons.train_outlined,'Trains'],[Icons.car_rental_outlined,'Cars']];
   @override
   Widget build(BuildContext context) {
@@ -47,7 +46,7 @@ class _HomepageState extends State<Homepage> {
                     .titleLarge
                     ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
-              TripForm(locations: locations),
+              TripForm(),
               SizedBox(height: 5,),
               Text(
                 'Services',

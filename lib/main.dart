@@ -1,11 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/pages/forgot_password_page/forgot_password.dart';
-import 'package:travel_app/pages/homepage/homepage.dart';
-import 'package:travel_app/pages/login_page/login_page.dart';
-import 'package:travel_app/pages/signup_page/signup_page.dart';
-import 'package:travel_app/pages/otp_verification_page/otp_verification.dart';
-import 'package:travel_app/pages/welcome_page/welcome_page.dart';
-import 'package:travel_app/pages/splash_screen/splash_screen.dart';
+import 'package:travel_app/pages/pages.dart';
 import 'config/theme.dart';
 
 void main() {
@@ -18,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: AppTheme.lightTheme,
-      initialRoute: '/homepage',  // Set the splash screen as initial route
+      initialRoute: '/splash',  // Set the splash screen as initial route
 
       routes: {
         '/splash': (context) => SplashScreen(),  // Add splash screen route
@@ -28,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/forgotPassword': (context) => ForgotPasswordPage(),
         '/otpVerification': (context) => OtpverificationPage(),
         '/homepage': (context) => Homepage(),
+        '/searchPage' : (context) => SearchPage()
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

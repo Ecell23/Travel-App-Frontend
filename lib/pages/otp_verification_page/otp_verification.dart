@@ -1,7 +1,77 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:travel_app/widgets/custom_background/custom_background.dart';
 
-class OtpverificationPage extends StatelessWidget {
+import '../../config/constants.dart';
+
+class OtpverificationPage extends StatefulWidget {
+  @override
+  State<OtpverificationPage> createState() => _OtpverificationPageState();
+}
+
+class _OtpverificationPageState extends State<OtpverificationPage> {
+  bool _isNotvalid  = false;
+  bool pendingrequest = false;
+  final List<TextEditingController> _controllers =
+  List.generate(6, (index) => TextEditingController());
+
+  void verifyOTP() async {
+    setState(() {
+      pendingrequest = true;
+    });
+    String otp = '';
+    for (var e in _controllers) {
+      otp+=e.text;
+    }
+
+    if(otp.length<6){
+      setState(() {
+        _isNotvalid = true;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Incorrect OTP")));
+    }
+    else{
+      var reqBody = {
+        "email": ModalRoute.of(context)?.settings.arguments,
+        "otp" : otp
+      };
+      try{
+        http.Response res = await http.post(
+          Uri.parse('${Constants.uri}/api/user/verify_otp'),
+          body: jsonEncode(reqBody),
+          headers: <String,String>{
+            'Content-Type' : 'application/json; charset=UTF-8',
+          },
+        );
+        if(res.statusCode==200){
+          if(jsonDecode(res.body)["valid"]) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("OTP verified")));
+          } else{
+            setState(() {
+              _isNotvalid = true;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Incorrect OTP")));
+          }
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Request new OTP")));
+          Navigator.of(context).pop();
+        }
+      }
+      catch(e){
+        print(e);
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection Failed")));
+      }
+
+    }
+
+
+    setState(() {
+      pendingrequest = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,14 +117,18 @@ class OtpverificationPage extends StatelessWidget {
                 SizedBox(height: 150), // Space below heading
 
                 // OTP TextFields
-                OTPInputField(), // Updated OTP field with auto-focus
+                OTPInputField(controllers: _controllers,isError: _isNotvalid,resetError: () {
+                  setState(() {
+                    _isNotvalid = false;
+                  });
+                },), // Updated OTP field with auto-focus
 
                 SizedBox(height: 50), // Space below OTP fields
 
                 // VERIFY OTP Button
                 ElevatedButton(
-                  onPressed: () {
-                    // Add your action here
+                  onPressed: pendingrequest? (){} : () {
+                    verifyOTP();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange,
@@ -64,7 +138,14 @@ class OtpverificationPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 16.0),
                   ),
                   child: Center(
-                    child: Text(
+                    child: pendingrequest? SizedBox(
+                      height: 25,
+                      width: 25,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        backgroundColor: Colors.orange,
+                      ),
+                    ) : Text(
                       'VERIFY OTP',
                       style: TextStyle(
                         color: Colors.white,
@@ -79,7 +160,7 @@ class OtpverificationPage extends StatelessWidget {
                 // CLICK TO RESEND Button
                 ElevatedButton(
                   onPressed: () {
-                    // Add your action here
+                    Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.orange.withOpacity(0.7),
@@ -110,32 +191,38 @@ class OtpverificationPage extends StatelessWidget {
 
 // Reusable OTP TextField Widget
 class OTPInputField extends StatefulWidget {
+  final List<TextEditingController> controllers;
+  final bool isError;
+  final VoidCallback resetError;
+
+  const OTPInputField({super.key, required this.controllers, required this.isError, required this.resetError});
   @override
   _OTPInputFieldState createState() => _OTPInputFieldState();
 }
 
 class _OTPInputFieldState extends State<OTPInputField> {
   final List<FocusNode> _focusNodes = List.generate(6, (index) => FocusNode());
-  final List<TextEditingController> _controllers =
-  List.generate(6, (index) => TextEditingController());
 
   @override
   void dispose() {
     for (var node in _focusNodes) {
       node.dispose();
     }
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
     super.dispose();
   }
 
   void _onChanged(String value, int index) {
+    widget.resetError();
     if (value.isNotEmpty) {
       if (index < 5) {
         FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
       } else {
         _focusNodes[index].unfocus(); // Hide keyboard after the last digit
+      }
+    }
+    else{
+      if(index>0){
+        FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
       }
     }
   }
@@ -149,7 +236,7 @@ class _OTPInputFieldState extends State<OTPInputField> {
             (index) => SizedBox(
           width: 40, // Fixed width for each OTP field
           child: TextField(
-            controller: _controllers[index],
+            controller: widget.controllers[index],
             focusNode: _focusNodes[index],
             keyboardType: TextInputType.number,
             textAlign: TextAlign.center,
@@ -157,14 +244,16 @@ class _OTPInputFieldState extends State<OTPInputField> {
             cursorColor: Colors.white, // White cursor
             onChanged: (value) => _onChanged(value, index),
             decoration: InputDecoration(
+              errorText: widget.isError? '' : null,
+              errorBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Theme.of(context).colorScheme.error,width: 1.5)
+              ),
               counterText: "", // Removes the character counter below the field
               filled: true,
-              fillColor: _focusNodes[index].hasFocus
-                  ? Colors.teal // Highlighted when focused
-                  : Colors.teal.withOpacity(0.5), // Light when not focused
+              fillColor: Colors.teal.withOpacity(0.5), // Light when not focused
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8.0),
-                borderSide: BorderSide.none,
+                borderSide:  BorderSide.none,
               ),
             ),
             style: TextStyle(

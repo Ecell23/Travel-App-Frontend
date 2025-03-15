@@ -6,3 +6,4 @@ export "splash_screen/splash_screen.dart";
 export "welcome_page/welcome_page.dart";
 export "homepage/homepage.dart";
 export 'search_page/search_page.dart';
+export 'bookings_page/bookings_page.dart';

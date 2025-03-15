@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
         '/forgotPassword': (context) => ForgotPasswordPage(),
         '/otpVerification': (context) => OtpverificationPage(),
         '/homepage': (context) => Homepage(),
-        '/searchPage' : (context) => SearchPage()
+        '/searchPage' : (context) => SearchPage(),
+        '/bookingPage' : (context) => BookingPage(),
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

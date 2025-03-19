@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:travel_app/pages/filter_page/filter_page.dart';
 import 'package:travel_app/pages/pages.dart';
+import 'package:travel_app/pages/profile_page/profile_page.dart';
+
 import 'config/theme.dart';
 
 void main() {
@@ -22,8 +25,10 @@ class MyApp extends StatelessWidget {
         '/forgotPassword': (context) => ForgotPasswordPage(),
         '/otpVerification': (context) => OtpverificationPage(),
         '/homepage': (context) => Homepage(),
-        '/searchPage' : (context) => SearchPage(),
         '/bookingPage' : (context) => BookingPage(),
+        '/filterpage':(context)=> FilterPage(),
+        '/profilepage':(context)=> ProfilePage(),
+        '/searchPage' : (context) => SearchPage()
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

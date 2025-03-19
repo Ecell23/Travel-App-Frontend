@@ -25,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/forgotPassword': (context) => ForgotPasswordPage(),
         '/otpVerification': (context) => OtpverificationPage(),
         '/homepage': (context) => Homepage(),
+        '/bookingPage' : (context) => BookingPage(),
         '/filterpage':(context)=> FilterPage(),
         '/profilepage':(context)=> ProfilePage(),
         '/searchPage' : (context) => SearchPage()

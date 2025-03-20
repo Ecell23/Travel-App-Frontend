@@ -10,7 +10,6 @@ class OtpverificationPage extends StatefulWidget {
   @override
   State<OtpverificationPage> createState() => _OtpverificationPageState();
 }
-
 class _OtpverificationPageState extends State<OtpverificationPage> {
   bool _isNotvalid  = false;
   bool pendingrequest = false;
@@ -47,7 +46,10 @@ class _OtpverificationPageState extends State<OtpverificationPage> {
         );
         if(res.statusCode==200){
           if(jsonDecode(res.body)["valid"]) {
+            String? token = res.headers["x-pwdreset-token"];
+            print(token);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("OTP verified")));
+            Navigator.of(context).pushNamedAndRemoveUntil('/resetPasswordPage', ModalRoute.withName('/login'),arguments: token);
           } else{
             setState(() {
               _isNotvalid = true;

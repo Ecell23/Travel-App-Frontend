@@ -4,7 +4,7 @@ import 'package:travel_app/pages/pages.dart';
 import 'package:travel_app/pages/profile_page/profile_page.dart';
 import 'config/theme.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 
@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: AppTheme.lightTheme,
-      initialRoute: '/splash',  // Set the splash screen as initial route
+      initialRoute: '/emergencyPage',  // Set the splash screen as initial route
 
       routes: {
         '/splash': (context) => SplashScreen(),  // Add splash screen route
@@ -28,7 +28,8 @@ class MyApp extends StatelessWidget {
         '/bookingPage' : (context) => BookingPage(),
         '/filterpage':(context)=> FilterPage(),
         '/profilepage':(context)=> ProfilePage(),
-        '/searchPage' : (context) => SearchPage()
+        '/searchPage' : (context) => SearchPage(),
+        '/emergencyPage' : (context) => EmergencyContactPage()
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

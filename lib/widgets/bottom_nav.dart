@@ -17,6 +17,11 @@ class BottomNav extends StatelessWidget {
         unselectedItemColor: Theme.of(context).colorScheme.onSurface,
         backgroundColor: Theme.of(context).colorScheme.primary,
         selectedItemColor: Colors.white,
+        onTap: (index) {
+          if(index == 1 && currentindex!=1){
+            Navigator.pushNamed(context, '/myTripsPage');
+          }
+        },
         items: [
           BottomNavigationBarItem(icon: Padding(
             padding: const EdgeInsets.all(5.0),

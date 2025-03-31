@@ -12,7 +12,7 @@ class MapsPage extends StatefulWidget {
 
 class _MapsPageState extends State<MapsPage> {
   late GoogleMapController mapController;
-  final apiKey = 'AIzaSyBYT-fkNAw0IKd2dRwOhKompwSMNqUJBrM';
+  final apiKey = 'API';
   late GooglePlace googlePlace;
   Set<Marker> _markers = {};
   Position? _currentPosition;

@@ -36,6 +36,10 @@ dependencies:
   url_launcher: ^6.1.14      # For making calls
   telephony: ^0.2.0
   flutter_phone_direct_caller: ^2.0.2
+  google_maps_flutter: ^2.2.0
+  google_place: ^0.4.0
+  carousel_slider: ^4.0.0
+  google_maps_cluster_manager: ^1.0.0
   permission_handler: ^11.0.1  # To request permissions
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -54,7 +58,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
-  build_runner: ^2.4.15
+  build_runner: ^2.4.14
   json_serializable: ^6.9.4
 
 # For information on the generic Dart part of this file, see the

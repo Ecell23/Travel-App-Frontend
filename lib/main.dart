@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_app/pages/filter_page/filter_page.dart';
 import 'package:travel_app/pages/pages.dart';
 import 'package:travel_app/pages/profile_page/profile_page.dart';
+import 'package:travel_app/providers/auth_provider.dart';
 import 'config/theme.dart';
 
-void main() async {
-  runApp(MyApp());
+void main() {
+  runApp(ChangeNotifierProvider(
+      create: (context) => Auth(),
+      child: MyApp())
+  );
+
 }
 
 class MyApp extends StatelessWidget {
@@ -29,7 +35,10 @@ class MyApp extends StatelessWidget {
         '/filterpage':(context)=> FilterPage(),
         '/profilepage':(context)=> ProfilePage(),
         '/searchPage' : (context) => SearchPage(),
-        '/emergencyPage' : (context) => EmergencyContactPage()
+
+        '/emergencyPage' : (context) => Emergency
+        '/myTripsPage' : (context) => MyTripsPage()
+
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

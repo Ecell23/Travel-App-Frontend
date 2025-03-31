@@ -1,0 +1,2 @@
+C:/Users/preet/AndroidStudioProjects/Travel-App-Frontend/android/app/.cxx/Debug/206u716m/x86/CMakeFiles/edit_cache.dir
+C:/Users/preet/AndroidStudioProjects/Travel-App-Frontend/android/app/.cxx/Debug/206u716m/x86/CMakeFiles/rebuild_cache.dir

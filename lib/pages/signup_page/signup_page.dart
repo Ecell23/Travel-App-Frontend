@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_app/widgets/custom_background/custom_background.dart';
 import 'package:http/http.dart' as http;
 
 import '../../config/constants.dart';
 import '../../models/user.dart';
+import '../../providers/auth_provider.dart';
 
 class SignupPage extends StatefulWidget {
   @override
@@ -38,7 +40,7 @@ class _SignupPageState extends State<SignupPage> {
         },
       );
       if(res.statusCode==200){
-        User user = new User.fromJson(jsonDecode(res.body));
+        Provider.of<Auth>(context, listen: false).login(res.headers['x-auth-token']!,jsonDecode(res.body) );
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Successful")));
         Navigator.pushNamedAndRemoveUntil(context, '/homepage',(Route<dynamic> route) => false);
       } else {

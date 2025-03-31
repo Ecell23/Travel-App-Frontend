@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import 'package:travel_app/services/trip_services.dart';
+
+import '../../../providers/auth_provider.dart';
 
 class TripForm extends StatefulWidget {
   const TripForm({
@@ -11,9 +15,11 @@ class TripForm extends StatefulWidget {
 }
 
 class _TripFormState extends State<TripForm> {
+  bool pendingRequest = false;
   List<String> locations = [ 'Gangtok','Shimla'];
   int guestCount = 1;
   DateTime selectedDate = DateTime.now();
+  TripService tripService = TripService();
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -27,6 +33,7 @@ class _TripFormState extends State<TripForm> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -296,12 +303,36 @@ class _TripFormState extends State<TripForm> {
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      setState(() {
+                        pendingRequest = true;
+                      });
+                      try{
+                        String token = Provider.of<Auth>(context,listen: false).token??'';
+                        var reqBody = {
+                          "startLocation":locations[0],
+                          "locations":locations,
+                          "startDate":selectedDate.toIso8601String(),
+                          "guests":guestCount
+                        };
+                        await tripService.postTrip(token,reqBody);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text("Trip Created Successfully!")));
+                        setState(() {
+                          pendingRequest = false;
+                        });
+                        Navigator.pushNamed(context, '/myTripsPage');
+                      } catch(e){
+                        setState(() {
+                          pendingRequest = false;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.redAccent, content: Text('${e.toString()}. Try Again!')));
+                      }
+                    },
                     style: ButtonStyle(
                         backgroundColor: WidgetStatePropertyAll(Theme.of(context).colorScheme.secondary),
                         shape: WidgetStatePropertyAll(RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)))
                     ),
-                    child: Text('CREATE TRIP',
+                    child: pendingRequest? SizedBox(height: 30, width : 30,child: CircularProgressIndicator(color: Colors.white,)) : Text('CREATE TRIP',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Colors.white),)
                 ),
               ),

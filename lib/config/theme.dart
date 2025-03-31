@@ -17,7 +17,9 @@ class AppTheme {
       scaffoldBackgroundColor: Color.fromRGBO(242, 245, 250, 1),
     textTheme: TextTheme(
       titleLarge: TextStyle(fontSize: 32,fontWeight: FontWeight.w600),
-      bodyLarge: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),
+        titleMedium: TextStyle(fontSize: 26,fontWeight: FontWeight.w600),
+
+        bodyLarge: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),
       bodyMedium: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),
       bodySmall: TextStyle(fontSize: 14,fontWeight: FontWeight.w600)
     )

@@ -11,6 +11,7 @@ void main() {
       create: (context) => Auth(),
       child: MyApp())
   );
+
 }
 
 class MyApp extends StatelessWidget {
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: AppTheme.lightTheme,
-      initialRoute: '/splash',  // Set the splash screen as initial route
+      initialRoute: '/emergencyPage',  // Set the splash screen as initial route
 
       routes: {
         '/splash': (context) => SplashScreen(),  // Add splash screen route
@@ -34,7 +35,10 @@ class MyApp extends StatelessWidget {
         '/filterpage':(context)=> FilterPage(),
         '/profilepage':(context)=> ProfilePage(),
         '/searchPage' : (context) => SearchPage(),
+
+        '/emergencyPage' : (context) => Emergency
         '/myTripsPage' : (context) => MyTripsPage()
+
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

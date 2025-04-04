@@ -8,4 +8,8 @@ export "homepage/homepage.dart";
 export 'search_page/search_page.dart';
 export 'reset_password_page/reset_password_page.dart';
 export 'bookings_page/bookings_page.dart';
+
+export 'emergency_page/emergency_page.dart';
+
 export 'my_trips_page/my_trips_page.dart';
+

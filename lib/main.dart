@@ -4,8 +4,13 @@ import 'package:travel_app/pages/pages.dart';
 import 'package:travel_app/pages/profile_page/profile_page.dart';
 import 'config/theme.dart';
 
-void main() async {
-  runApp(MyApp());
+
+void main() {
+  runApp(ChangeNotifierProvider(
+      create: (context) => Auth(),
+      child: MyApp())
+  );
+
 }
 
 class MyApp extends StatelessWidget {
@@ -14,8 +19,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter App',
       theme: AppTheme.lightTheme,
-      initialRoute: '/mapsPage',  // Set the splash screen as initial route
 
+      initialRoute: '/splash',  // Set the splash screen as initial route
       routes: {
         '/splash': (context) => SplashScreen(),  // Add splash screen route
         '/welcome': (context) => WelcomePage(),
@@ -31,6 +36,7 @@ class MyApp extends StatelessWidget {
         '/searchPage' : (context) => SearchPage(),
         '/emergencyPage' : (context) => EmergencyContactPage(),
         '/mapsPage' : (context) => MapsPage()
+        '/myTripsPage' : (context) => MyTripsPage()
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

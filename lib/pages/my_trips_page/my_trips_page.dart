@@ -28,14 +28,18 @@ class _MyTripsPageState extends State<MyTripsPage> {
     try{
       String token = Provider.of<Auth>(context,listen: false).token??'';
       trips = await tripService.getALlTrips(token);
+      if(mounted){
       setState(() {
         pendingFetch = false;
       });
+      }
     } catch(e){
+      if(mounted){
       setState(() {
         pendingFetch = false;
-        fetchError = e.toString();
-      });
+          fetchError = e.toString();
+        });
+      }
     }
   }
   @override

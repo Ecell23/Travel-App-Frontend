@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_place/google_place.dart';
+import 'dart:async';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -8,7 +11,52 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   TextEditingController searchController = TextEditingController();
-  List<String> locations = ['Delhi', 'Shillong', 'Goa','hydrabad','Silchar','Kohima','Darjeeling','Puri'];
+  List<AutocompletePrediction> predictions = [];
+  Timer? _debounce;
+  late GooglePlace googlePlace;
+  final String apiKey = 'AIzaSyBYT-fkNAw0IKd2dRwOhKompwSMNqUJBrM';
+
+  @override
+  void initState() {
+    super.initState();
+    googlePlace = GooglePlace(apiKey);
+    searchController.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    searchController.removeListener(_onSearchChanged);
+    searchController.dispose();
+    _debounce?.cancel();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 400), () {
+      if (searchController.text.isEmpty) {
+        setState(() {
+          predictions = [];
+        });
+      } else {
+        _autocompleteSearch(searchController.text);
+      }
+    });
+  }
+
+  Future<void> _autocompleteSearch(String value) async {
+    var result = await googlePlace.autocomplete.get(value,types: '(regions)');
+    if (result != null && result.predictions != null) {
+      setState(() {
+        predictions = result.predictions!;
+      });
+    } else {
+      setState(() {
+        predictions = [];
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,19 +76,24 @@ class _SearchPageState extends State<SearchPage> {
           child: IconButton(onPressed: (){}, icon: Icon(Icons.search)),
         )],
       ),
-      body: ListView.builder(
-        padding: EdgeInsets.symmetric(horizontal: 15),
-        itemCount: locations.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              shape: Border(top: BorderSide(color: Theme.of(context).colorScheme.onSecondary)),
-              title: Text(locations[index]),
-              onTap: (){
-                Navigator.pop(context,locations[index]);
-              },
-            );
-          }
-      ),
+      body: searchController.text.isEmpty
+          ? Center(child: Text('Search where you want to go', style: TextStyle(fontSize: 16, color: Colors.grey)))
+          : predictions.isEmpty
+              ? Center(child: Text('No results found', style: TextStyle(fontSize: 16, color: Colors.grey)))
+              : ListView.builder(
+                  padding: EdgeInsets.symmetric(horizontal: 15),
+                  itemCount: predictions.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final prediction = predictions[index];
+                    return ListTile(
+                      shape: Border(top: BorderSide(color: Theme.of(context).colorScheme.onSecondary)),
+                      title: Text(prediction.description ?? ''),
+                      onTap: () {
+                        Navigator.pop(context, prediction.description);
+                      },
+                    );
+                  },
+                ),
     );
   }
 }

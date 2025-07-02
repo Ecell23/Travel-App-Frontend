@@ -17,8 +17,11 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         title: SizedBox(
-          height: 35,
-            child: Image.asset('assets/images/planit-high-resolution-logo-transparent.png')
+          height: 30,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: Image.asset('assets/images/planit-high-resolution-logo-transparent.png'),
+            )
         ),
         actions: [Padding(
           padding: const EdgeInsets.all(15.0),

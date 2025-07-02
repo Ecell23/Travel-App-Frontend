@@ -1,12 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:travel_app/models/place_model.dart';
 
 part 'trip.g.dart';
 
 @JsonSerializable()
 class Trip {
   final String id;
-  final String startLocation;
-  final List<String> locations;
+  final PlaceModel startLocation;
+  final List<PlaceModel> locations;
   final DateTime startDate;
   final int guests;
   final String? budget;

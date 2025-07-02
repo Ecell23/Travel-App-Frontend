@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:google_place/google_place.dart';
 import 'dart:async';
 
+import 'package:travel_app/models/place_model.dart';
+
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -47,10 +49,12 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> _autocompleteSearch(String value) async {
     var result = await googlePlace.autocomplete.get(value,types: '(regions)');
     if (result != null && result.predictions != null) {
+      print(result.status);
       setState(() {
         predictions = result.predictions!;
       });
     } else {
+      print(result?.toString());
       setState(() {
         predictions = [];
       });
@@ -89,7 +93,12 @@ class _SearchPageState extends State<SearchPage> {
                       shape: Border(top: BorderSide(color: Theme.of(context).colorScheme.onSecondary)),
                       title: Text(prediction.description ?? ''),
                       onTap: () {
-                        Navigator.pop(context, prediction.description);
+                        print(prediction.placeId);
+                        Navigator.pop(context, PlaceModel(
+                          placeId: prediction.placeId!,
+                          placeName: prediction.description!,
+                          day: 1,
+                        ));
                       },
                     );
                   },

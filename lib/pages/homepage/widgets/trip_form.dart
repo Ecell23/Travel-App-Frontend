@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:travel_app/models/place_model.dart';
 import 'package:travel_app/services/trip_services.dart';
 
 import '../../../providers/auth_provider.dart';
@@ -16,10 +18,16 @@ class TripForm extends StatefulWidget {
 
 class _TripFormState extends State<TripForm> {
   bool pendingRequest = false;
-  List<String> locations = [ 'Gangtok','Shimla'];
+  List<PlaceModel> locations = [ PlaceModel(placeId: '1', placeName: 'Gangtok', day: 1), PlaceModel(placeId: '2', placeName: 'Shimla', day: 1)];
   int guestCount = 1;
   DateTime selectedDate = DateTime.now();
-  TripService tripService = TripService();
+  late final TripService tripService;
+
+  @override
+  void initState() {
+    super.initState();
+    tripService = TripService(auth: Provider.of<Auth>(context,listen: false));
+  }
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -57,10 +65,15 @@ class _TripFormState extends State<TripForm> {
                   spacing: 15,
                   children: List.generate(locations.length, (index) => GestureDetector(
                     onTap: () async {
-                      String? result = await Navigator.pushNamed(context, '/searchPage') as String?;
+                      PlaceModel? result = await Navigator.pushNamed(context, '/searchPage') as PlaceModel?;
                       if(result!=null){
                         setState(() {
-                          locations[index] = result;
+                          int currentDay = locations[index].day;
+                          locations[index] = PlaceModel(
+                            placeId: result.placeId,
+                            placeName: result.placeName,
+                            day: currentDay,
+                          );
                         });
                       }
                     },
@@ -91,19 +104,93 @@ class _TripFormState extends State<TripForm> {
                                       Text(index==0? "FROM" : "LOCATION $index",
                                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                       ),
-                                      Text(locations[index],
+                                      Text(locations[index].placeName??'',
+                                      overflow: TextOverflow.ellipsis,
                                         style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
                                       ),
                                     ],
                                   ),
-                                  index>0 && locations.length>2? IconButton(onPressed: (){
-                                    setState(() {
-                                      locations.removeAt(index);
-                                    });
-                                  },
-                                      icon: Icon(Icons.delete_outline,size: 30,)
-                                  ) : SizedBox(),
-                    ],
+                                  Row(
+                                    children: [
+                                      if (index > 0)
+                                        Row(
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Text("DAYS",
+                                                  style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                                                ),
+                                                SizedBox(height: 2,),
+                                                Row(
+                                                  children: [
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        if (locations[index].day > 1) {
+                                                          setState(() {
+                                                            locations[index] = PlaceModel(
+                                                              placeId: locations[index].placeId,
+                                                              placeName: locations[index].placeName,
+                                                              day: locations[index].day - 1,
+                                                            );
+                                                          });
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(2),
+                                                        decoration: BoxDecoration(
+                                                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                                          borderRadius: BorderRadius.circular(4),
+                                                        ),
+                                                        child: Icon(Icons.remove, size: 18),
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    Text(
+                                                      "${locations[index].day}",
+                                                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                                        color: Theme.of(context).colorScheme.onSecondary,
+                                                        fontWeight: FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    SizedBox(width: 8),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          locations[index] = PlaceModel(
+                                                            placeId: locations[index].placeId,
+                                                            placeName: locations[index].placeName,
+                                                            day: locations[index].day + 1,
+                                                          );
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        padding: EdgeInsets.all(2),
+                                                        decoration: BoxDecoration(
+                                                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                                          borderRadius: BorderRadius.circular(4),
+                                                        ),
+                                                        child: Icon(Icons.add, size: 18),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(width: 8),
+                                          ],
+                                        ),
+                                      index>0 && locations.length>2? IconButton(
+                                        onPressed: (){
+                                          setState(() {
+                                            locations.removeAt(index);
+                                          });
+                                        },
+                                        icon: Icon(Icons.delete_outline,size: 30,)
+                                      ) : SizedBox(),
+                                    ],
+                                  ),
+                                ],
                               ),
                             )
                           ],
@@ -116,10 +203,14 @@ class _TripFormState extends State<TripForm> {
                 width: double.infinity,
                 child: TextButton(
                     onPressed: () async {
-                      String? result = await Navigator.pushNamed(context, '/searchPage') as String?;
+                      PlaceModel? result = await Navigator.pushNamed(context, '/searchPage') as PlaceModel?;
                       if(result!=null){
                         setState(() {
-                          locations.add(result);
+                          locations.add(PlaceModel(
+                            placeId: result.placeId,
+                            placeName: result.placeName,
+                            day: 1,
+                          ));
                         });
                       }
                     },
@@ -308,24 +399,23 @@ class _TripFormState extends State<TripForm> {
                         pendingRequest = true;
                       });
                       try{
-                        String token = Provider.of<Auth>(context,listen: false).token??'';
                         var reqBody = {
-                          "startLocation":locations[0],
-                          "locations":locations,
+                          "startLocation":locations[0].toJson(),
+                          "locations":locations.map((e) => e.toJson()).toList(),
                           "startDate":selectedDate.toIso8601String(),
-                          "guests":guestCount
+                          "guests":guestCount,
                         };
-                        await tripService.postTrip(token,reqBody);
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text("Trip Created Successfully!")));
+                        await tripService.postTrip(reqBody);
+                        if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text("Trip Created Successfully!")));
                         setState(() {
                           pendingRequest = false;
                         });
-                        Navigator.pushNamed(context, '/myTripsPage');
+                        if(context.mounted) Navigator.pushNamed(context, '/myTripsPage');
                       } catch(e){
                         setState(() {
                           pendingRequest = false;
                         });
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.redAccent, content: Text('${e.toString()}. Try Again!')));
+                        if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.redAccent, content: Text('${e.toString()}. Try Again!')));
                       }
                     },
                     style: ButtonStyle(

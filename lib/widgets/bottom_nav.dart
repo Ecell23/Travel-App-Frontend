@@ -21,6 +21,18 @@ class BottomNav extends StatelessWidget {
           if(index == 1 && currentindex!=1){
             Navigator.pushNamed(context, '/myTripsPage');
           }
+          if(index == 0 && currentindex!=0){
+            Navigator.pushNamed(context, '/homepage');
+          }
+          if(index == 2 && currentindex!=2){
+            Navigator.pushNamed(context, '/mapsPage');
+          }
+          if(index == 3 && currentindex!=3){
+            Navigator.pushNamed(context, '/bookingPage');
+          }
+          if(index == 4 && currentindex!=4){
+            Navigator.pushNamed(context, '/profilepage');
+          }
         },
         items: [
           BottomNavigationBarItem(icon: Padding(

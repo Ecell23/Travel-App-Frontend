@@ -8,9 +8,11 @@ part of 'trip.dart';
 
 Trip _$TripFromJson(Map<String, dynamic> json) => Trip(
       id: json['_id'] as String,
-      startLocation: json['startLocation'] as String,
-      locations:
-          (json['locations'] as List<dynamic>).map((e) => e as String).toList(),
+      startLocation:
+          PlaceModel.fromJson(json['startLocation'] as Map<String, dynamic>),
+      locations: (json['locations'] as List<dynamic>)
+          .map((e) => PlaceModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       startDate: DateTime.parse(json['startDate'] as String),
       guests: (json['guests'] as num).toInt(),
       budget: json['budget'] as String?,
@@ -19,7 +21,7 @@ Trip _$TripFromJson(Map<String, dynamic> json) => Trip(
     );
 
 Map<String, dynamic> _$TripToJson(Trip instance) => <String, dynamic>{
-      'id': instance.id,
+      '_id': instance.id,
       'startLocation': instance.startLocation,
       'locations': instance.locations,
       'startDate': instance.startDate.toIso8601String(),

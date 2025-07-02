@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:travel_app/pages/filter_page/filter_page.dart';
 import 'package:travel_app/pages/live_trip_page/live_trip_page.dart';
 import 'package:travel_app/pages/pages.dart';
 import 'package:travel_app/pages/profile_page/profile_page.dart';
+import 'package:travel_app/providers/auth_provider.dart';
 import 'config/theme.dart';
 
 
@@ -38,7 +40,7 @@ class MyApp extends StatelessWidget {
         '/itineraryPage' : (context) => ItineraryPage(),
         '/emergencyPage' : (context) => EmergencyContactPage(),
         '/mapsPage' : (context) => MapsPage(),
-        '/myTripsPage' : (context) => MyTripsPage,
+        '/myTripsPage' : (context) => MyTripsPage(),
       },
       debugShowCheckedModeBanner: false, // Disable debug banner
     );

@@ -472,4 +472,4 @@ class SafetyBoardWidget extends StatelessWidget {
       ),
     );
   }
-}
+} 

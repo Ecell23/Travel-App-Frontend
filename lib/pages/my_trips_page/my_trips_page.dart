@@ -56,7 +56,7 @@ class _MyTripsPageState extends State<MyTripsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Trips', style: Theme.of(context).textTheme.titleMedium),
+        title: Text('My Trips', style: Theme.of(context).textTheme.titleLarge),
         elevation: 0,
       ),
       body: RefreshIndicator(onRefresh: loadTrips, child: pendingFetch? Center(child: CircularProgressIndicator())

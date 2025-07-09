@@ -38,7 +38,7 @@ dependencies:
   flutter_phone_direct_caller: ^2.0.2
   google_maps_flutter: ^2.2.0
   google_place: ^0.4.0
-  carousel_slider: ^4.0.0
+  carousel_slider: ^5.1.1
   google_maps_cluster_manager: ^1.0.0
   permission_handler: ^11.0.1  # To request permissions
   # The following adds the Cupertino Icons font to your application.
@@ -49,6 +49,7 @@ dependencies:
   json_annotation: ^4.9.0
   provider: ^6.1.2
   dotted_line: ^3.2.3
+  google_places_flutter: ^2.1.0
 
 dev_dependencies:
   flutter_test:

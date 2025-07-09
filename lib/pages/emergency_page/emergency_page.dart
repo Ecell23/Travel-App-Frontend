@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:travel_app/pages/emergency_page/widgets/add_contact_button.dart';
 import 'package:travel_app/pages/emergency_page/widgets/sos_button.dart';
 import 'package:travel_app/widgets/bottom_nav.dart';
+import 'package:provider/provider.dart';
+import '../../providers/auth_provider.dart';
 
 class EmergencyContactPage extends StatefulWidget {
   @override
@@ -9,18 +11,25 @@ class EmergencyContactPage extends StatefulWidget {
 }
 
 class _EmergencyContactPageState extends State<EmergencyContactPage> {
-  List<String> emergencyContacts = [];
-
-  void addContact(String contact) {
-    setState(() {
-      emergencyContacts.add(contact);
-    });
-  }
-
-  void removeContact(int index) {
-    setState(() {
-      emergencyContacts.removeAt(index);
-    });
+  // Handle error display with snackbar
+  void _handleErrorDisplay(BuildContext context, Auth authProvider) {
+    // Only show error if there's an unshown error
+    if (authProvider.hasUnshownError) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(authProvider.editError!),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 3),
+            ),
+          );
+        
+        // Mark error as shown
+        authProvider.markErrorAsShown();
+      });
+    }
   }
 
   void showInfoDialog(BuildContext context) {
@@ -62,8 +71,36 @@ class _EmergencyContactPageState extends State<EmergencyContactPage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
+    final authProvider = Provider.of<Auth>(context);
+    final user = authProvider.user;
+    final isLoading = authProvider.isLoading;
+    
+    // Handle error display
+    _handleErrorDisplay(context, authProvider);
+
+    void deleteContact(int index) async {
+    final success = await authProvider.removeEmergencyContact(index);
+    if (success) {
+      if(context.mounted){
+        ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text('Contact removed successfully'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 3),
+        ));
+      }
+    }
+  }
+    
+    // Get emergency contacts from user
+    final emergencyContacts = user?.emergencyContacts ?? [];
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Safety Settings'),
+        backgroundColor: colorScheme.surface,
+      ),
       backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: Padding(
@@ -71,11 +108,6 @@ class _EmergencyContactPageState extends State<EmergencyContactPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Safety Settings',
-                style: textTheme.titleLarge?.copyWith(color: colorScheme.onSurface),
-              ),
-              SizedBox(height: 20),
               Expanded(
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
@@ -86,6 +118,7 @@ class _EmergencyContactPageState extends State<EmergencyContactPage> {
                   child: Column(
                     children: [
                       // Centering the SOS Button with Info Button
+                      SizedBox(height: 20),
                       Stack(
                         children: [
                           Center(
@@ -110,48 +143,73 @@ class _EmergencyContactPageState extends State<EmergencyContactPage> {
 
                       // Show placeholder if the list is empty
                       Expanded(
-                        child: emergencyContacts.isEmpty
-                            ? Center(
-                          child: Text(
-                            'No emergency contacts yet.',
-                            style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface.withOpacity(0.6)),
-                          ),
-                        )
-                            : ListView.builder(
-                          itemCount: emergencyContacts.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 6.0),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                      decoration: BoxDecoration(
-                                        color: colorScheme.secondaryContainer,
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: colorScheme.primary.withOpacity(0.5)),
-                                      ),
-                                      child: Text(
-                                        emergencyContacts[index],
-                                        style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
-                                      ),
+                        child: isLoading 
+                          ? Center(child: CircularProgressIndicator())
+                          : emergencyContacts.isEmpty
+                              ? Center(
+                                child: Text(
+                                  'No emergency contacts yet.',
+                                  style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface.withOpacity(0.6)),
+                                ),
+                              )
+                              : ListView.builder(
+                                itemCount: emergencyContacts.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                                    child: Row(
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                            decoration: BoxDecoration(
+                                              color: colorScheme.secondaryContainer,
+                                              borderRadius: BorderRadius.circular(20),
+                                              border: Border.all(color: colorScheme.primary.withOpacity(0.5)),
+                                            ),
+                                            child: Text(
+                                              emergencyContacts[index],
+                                              style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
+                                            ),
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: Icon(Icons.delete, color: colorScheme.error),
+                                          onPressed: isLoading 
+                                            ? null 
+                                            : () async {
+                                                deleteContact(index);
+                                              },
+                                        ),
+                                      ],
                                     ),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(Icons.delete, color: colorScheme.error),
-                                    onPressed: () => removeContact(index),
-                                  ),
-                                ],
+                                  );
+                                },
                               ),
-                            );
-                          },
-                        ),
                       ),
 
                       // Add Contact Button
                       SizedBox(height: 20),
-                      AddContactWidget(onAddContact: addContact),
+                      AddContactWidget(
+                        isLoading: isLoading,
+                        onAddContact: (String contact) async {
+                          final success = await authProvider.addEmergencyContact(contact);
+                          if (success) {
+                            if(context.mounted){
+                            ScaffoldMessenger.of(context)
+                              ..hideCurrentSnackBar()
+                              ..showSnackBar(
+                                SnackBar(
+                                  content: Text('Contact added successfully'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                            }
+                            return true;
+                          }
+                          return false;
+                        },
+                      ),
                     ],
                   ),
                 ),

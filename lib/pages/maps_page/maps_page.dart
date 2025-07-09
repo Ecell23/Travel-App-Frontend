@@ -11,7 +11,7 @@ class MapsPage extends StatefulWidget {
 }
 
 class _MapsPageState extends State<MapsPage> {
-  late GoogleMapController mapController;
+  GoogleMapController? mapController;
   final apiKey = 'AIzaSyBYT-fkNAw0IKd2dRwOhKompwSMNqUJBrM';
   late GooglePlace googlePlace;
   Set<Marker> _markers = {};
@@ -19,6 +19,10 @@ class _MapsPageState extends State<MapsPage> {
   final double _mapHeight = 0.50;
   bool _isLoading = true;
   String? _selectedCategory;
+  bool _disposed = false;
+  
+  // Default position for Delhi, India if location is unavailable
+  final LatLng _defaultPosition = LatLng(28.6139, 77.2090);
 
   @override
   void initState() {
@@ -27,31 +31,71 @@ class _MapsPageState extends State<MapsPage> {
     _determinePosition();
   }
 
-  Future<void> _determinePosition() async {
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+  @override
+  void dispose() {
+    _disposed = true;
+    mapController?.dispose();
+    super.dispose();
+  }
+
+  // Safe setState that checks if the widget is still mounted
+  void _safeSetState(VoidCallback fn) {
+    if (mounted && !_disposed) {
+      setState(fn);
     }
+  }
 
-    if (permission == LocationPermission.deniedForever) return;
+  Future<void> _determinePosition() async {
+    try {
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
 
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      _currentPosition = position;
-      _isLoading = false;
-    });
-    // mapController.animateCamera(
-    //   CameraUpdate.newLatLng(
-    //     LatLng(position.latitude, position.longitude),
-    //   ),
-    // );
+      if (permission == LocationPermission.deniedForever) {
+        // If permission is denied forever, exit loading state
+        _safeSetState(() {
+          _isLoading = false;
+        });
+        return;
+      }
+
+      try {
+        Position position = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.high)
+            .timeout(const Duration(seconds: 5));
+        
+        _safeSetState(() {
+          _currentPosition = position;
+          _isLoading = false;
+        });
+        
+        // Move camera to current position if map is already created
+        if (mapController != null && _currentPosition != null) {
+          mapController!.animateCamera(
+            CameraUpdate.newLatLng(
+              LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+            ),
+          );
+        }
+      } catch (e) {
+        print("Error getting position: $e");
+        _safeSetState(() {
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Error in determine position: $e");
+      _safeSetState(() {
+        _isLoading = false;
+      });
+    }
   }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
     if (_currentPosition != null) {
-      mapController.animateCamera(
+      mapController!.animateCamera(
         CameraUpdate.newLatLng(
           LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
         ),
@@ -60,43 +104,48 @@ class _MapsPageState extends State<MapsPage> {
   }
 
   Future<void> searchNearby(String category) async {
-    if (_currentPosition == null) return;
+    if (_currentPosition == null || !mounted) return;
 
     String placeType = _getPlaceType(category);
-    setState(() {
+    _safeSetState(() {
       _selectedCategory = category;
       _markers.clear();
     });
 
-    var result = await googlePlace.search.getNearBySearch(
-      Location(lat: _currentPosition!.latitude, lng: _currentPosition!.longitude),
-      5000,
-      type: placeType,
-    );
+    try {
+      var result = await googlePlace.search.getNearBySearch(
+        Location(lat: _currentPosition!.latitude, lng: _currentPosition!.longitude),
+        5000,
+        type: placeType,
+      );
 
-    if (result == null || result.results == null || result.results!.isEmpty) return;
+      if (!mounted || _disposed) return;
+      if (result == null || result.results == null || result.results!.isEmpty) return;
 
-    List<Marker> markers = [];
-    for (var place in result.results!) {
-      if (place.geometry?.location != null && place.placeId != null) {
-        final marker = Marker(
-          markerId: MarkerId(place.placeId!),
-          position: LatLng(
-            place.geometry!.location!.lat!,
-            place.geometry!.location!.lng!,
-          ),
-          infoWindow: InfoWindow(
-            title: place.name ?? 'No name',
-            snippet: place.vicinity ?? 'No address',
-          ),
-        );
-        markers.add(marker);
+      List<Marker> markers = [];
+      for (var place in result.results!) {
+        if (place.geometry?.location != null && place.placeId != null) {
+          final marker = Marker(
+            markerId: MarkerId(place.placeId!),
+            position: LatLng(
+              place.geometry!.location!.lat!,
+              place.geometry!.location!.lng!,
+            ),
+            infoWindow: InfoWindow(
+              title: place.name ?? 'No name',
+              snippet: place.vicinity ?? 'No address',
+            ),
+          );
+          markers.add(marker);
+        }
       }
-    }
 
-    setState(() {
-      _markers = markers.toSet();
-    });
+      _safeSetState(() {
+        _markers = markers.toSet();
+      });
+    } catch (e) {
+      print("Error searching nearby places: $e");
+    }
   }
 
   String _getPlaceType(String category) {
@@ -122,7 +171,7 @@ class _MapsPageState extends State<MapsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Maps', style: Theme.of(context).textTheme.bodyLarge),
+        title: Text('Maps', style: Theme.of(context).textTheme.titleLarge),
         backgroundColor: Colors.white,
         foregroundColor: Colors.blueGrey[800],
       ),
@@ -140,7 +189,7 @@ class _MapsPageState extends State<MapsPage> {
                     initialCameraPosition: CameraPosition(
                       target: _currentPosition != null
                           ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
-                          : LatLng(28.6139, 77.2090),
+                          : _defaultPosition,
                       zoom: 12.0,
                     ),
                     markers: _markers,
@@ -183,8 +232,8 @@ class _MapsPageState extends State<MapsPage> {
                   right: 10,
                   child: FloatingActionButton(
                     onPressed: () {
-                      if (_currentPosition != null) {
-                        mapController.animateCamera(
+                      if (_currentPosition != null && mapController != null) {
+                        mapController!.animateCamera(
                           CameraUpdate.newLatLng(
                             LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
                           ),
@@ -273,4 +322,8 @@ class _MapsPageState extends State<MapsPage> {
       bottomNavigationBar: BottomNav(currentindex: 2),
     );
   }
+}
+
+class TimeoutException implements Exception {
+  String toString() => 'The operation timed out.';
 }

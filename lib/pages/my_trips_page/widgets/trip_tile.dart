@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:travel_app/pages/live_trip_page/trip_details_page.dart';
 import 'package:travel_app/pages/my_trips_page/widgets/edit_trip_card.dart';
 import 'package:travel_app/providers/auth_provider.dart';
 import 'package:travel_app/services/trip_services.dart';
@@ -64,23 +65,29 @@ class _TripTileState extends State<TripTile> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('${widget.trip.locations[1].placeName} Trip', style: Theme.of(context).textTheme.titleMedium),
-                            SizedBox(height: 2),
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12),
-                                color: Theme.of(context).colorScheme.primary,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('${widget.trip.locations[1].placeName} Trip', 
+                              style: Theme.of(context).textTheme.titleMedium,
+                              overflow: TextOverflow.ellipsis,
+                                
                               ),
-                              child: Text(
-                                DateFormat('dd-MM-yyyy').format(widget.trip.startDate),
-                                style: TextStyle(fontSize: 13, color: Colors.white),
-                              ),
-                            )
-                          ],
+                              SizedBox(height: 2),
+                              Container(
+                                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(12),
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                                child: Text(
+                                  DateFormat('dd-MM-yyyy').format(widget.trip.startDate),
+                                  style: TextStyle(fontSize: 13, color: Colors.white),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                         IconButton(
                           onPressed: () {
@@ -136,6 +143,7 @@ class _TripTileState extends State<TripTile> {
                                           child: Text(
                                             index == 0 ? '${widget.trip.startLocation.placeName} - Start' : widget.trip.locations[index].placeName,
                                             style: Theme.of(context).textTheme.bodyLarge,
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                         Text(
@@ -177,7 +185,9 @@ class _TripTileState extends State<TripTile> {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: () {}, // Add your action here
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => TripDetailsPage(trip: widget.trip)));
+                    }, // Add your action here
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Theme.of(context).colorScheme.primary,

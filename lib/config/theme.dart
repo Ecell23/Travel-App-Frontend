@@ -7,7 +7,7 @@ class AppTheme {
           primary: Color.fromRGBO(24, 192, 193, 1),
           onPrimary: Colors.white,
           secondary: Color.fromRGBO(255, 146, 90, 1),
-          onSecondary: Color.fromRGBO(0, 0, 0, 0.3),
+          onSecondary: Color.fromRGBO(0, 0, 0, 0.4),
           error: Colors.redAccent,
           onError: Colors.white,
           surface: Color.fromRGBO(242, 245, 250, 1),
@@ -16,8 +16,8 @@ class AppTheme {
       ),
       scaffoldBackgroundColor: Color.fromRGBO(242, 245, 250, 1),
     textTheme: TextTheme(
-      titleLarge: TextStyle(fontSize: 26,fontWeight: FontWeight.w600),
-        titleMedium: TextStyle(fontSize: 22,fontWeight: FontWeight.w600),
+      titleLarge: TextStyle(fontSize: 24,fontWeight: FontWeight.w600),
+        titleMedium: TextStyle(fontSize: 20,fontWeight: FontWeight.w600),
 
         bodyLarge: TextStyle(fontSize: 18,fontWeight: FontWeight.w600),
       bodyMedium: TextStyle(fontSize: 16,fontWeight: FontWeight.w600),

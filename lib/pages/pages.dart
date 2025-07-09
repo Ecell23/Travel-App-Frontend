@@ -11,3 +11,5 @@ export 'bookings_page/bookings_page.dart';
 export 'my_trips_page/my_trips_page.dart';
 export 'emergency_page/emergency_page.dart';
 export 'maps_page/maps_page.dart';
+export 'live_trip_page/trip_details_page.dart';
+export 'attractions_page/attractions_page.dart';

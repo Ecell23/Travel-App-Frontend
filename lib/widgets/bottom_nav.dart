@@ -18,8 +18,30 @@ class BottomNav extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.primary,
         selectedItemColor: Colors.white,
         onTap: (index) {
-          if(index == 1 && currentindex!=1){
-            Navigator.pushNamed(context, '/myTripsPage');
+          // Don't navigate if we're already on the selected tab
+          if (index == currentindex) return;
+          
+          switch (index) {
+            case 0: // Home
+              // Clear all routes and go to homepage
+              Navigator.pushNamedAndRemoveUntil(
+                context, 
+                '/homepage', 
+                (route) => false
+              );
+              break;
+            case 1: // My Trips
+              Navigator.pushReplacementNamed(context, '/myTripsPage');
+              break;
+            case 2: // Maps
+              Navigator.pushReplacementNamed(context, '/mapsPage');
+              break;
+            case 3: // Bookings
+              Navigator.pushReplacementNamed(context, '/bookingPage');
+              break;
+            case 4: // Profile
+              Navigator.pushReplacementNamed(context, '/profilepage');
+              break;
           }
         },
         items: [

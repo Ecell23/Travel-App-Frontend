@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Hotel {
   final String name;
@@ -6,6 +7,7 @@ class Hotel {
   final String imageUrl;
   final double price;
   final List<String> amenities;
+  final String? bookingUrl;
 
   Hotel({
     required this.name,
@@ -13,6 +15,7 @@ class Hotel {
     required this.imageUrl,
     required this.price,
     required this.amenities,
+    this.bookingUrl,
   });
 }
 
@@ -75,6 +78,33 @@ Widget buildHotelCard(Hotel hotel) {
               ],
             ),
           ),
+
+          // ✅ Booking button only if URL is available
+          if (hotel.bookingUrl != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.open_in_new),
+                  label: Text("View on Tripadvisor"),
+                  onPressed: () async {
+                    final url = Uri.parse(hotel.bookingUrl!);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } else {
+                      debugPrint("Could not launch URL");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     ),

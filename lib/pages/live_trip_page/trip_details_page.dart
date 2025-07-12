@@ -8,6 +8,7 @@ import 'package:travel_app/pages/attractions_page/attractions_page.dart';
 import 'package:travel_app/pages/live_trip_page/widgets/safety_board_widget.dart';
 import 'package:travel_app/providers/auth_provider.dart';
 import 'package:travel_app/services/trip_services.dart';
+import 'package:travel_app/pages/bookings_page/bookings_page.dart';
 
 class TripDetailsPage extends StatefulWidget {
   final Trip trip;
@@ -148,8 +149,16 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
           departureDay: departureDay,
           arrivalDate: arrivalDate,
           onHotelsTap: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Navigate to bookings page')),
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BookingPage(
+                  prefillLocation: place.placeName,
+                  prefillStartDate: arrivalDate,
+                  prefillEndDate: arrivalDate.add(Duration(days: place.day - 1)),
+                  prefillAdults: widget.trip.guests,
+                ),
+              ),
             );
           },
           onAttractionsTap: () async {

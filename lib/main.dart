@@ -6,7 +6,6 @@ import 'package:travel_app/pages/profile_page/profile_page.dart';
 import 'package:travel_app/providers/auth_provider.dart';
 import 'config/theme.dart';
 
-
 void main() {
   runApp(ChangeNotifierProvider(
       create: (context) => Auth(),
@@ -14,7 +13,6 @@ void main() {
   );
 
 }
-
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -22,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter App',
       theme: AppTheme.lightTheme,
 
-      initialRoute: '/bookingPage',  // Set the splash screen as initial route
+      initialRoute: '/splash',  // Set the splash screen as initial route
       routes: {
         '/splash': (context) => SplashScreen(),  // Add splash screen route
         '/welcome': (context) => WelcomePage(),

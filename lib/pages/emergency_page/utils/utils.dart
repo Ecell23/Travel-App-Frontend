@@ -52,3 +52,12 @@ Future<bool> callPolice(BuildContext context) async {
     return false;
   }
 }
+
+Future<bool> callEmergency(BuildContext context, String number) async {
+  try {
+    bool? callMade = await FlutterPhoneDirectCaller.callNumber(number);
+    return callMade ?? false;
+  } catch (e) {
+    return false;
+  }
+}

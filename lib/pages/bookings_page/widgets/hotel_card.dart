@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Hotel {
   final String name;
@@ -6,6 +7,7 @@ class Hotel {
   final String imageUrl;
   final double price;
   final List<String> amenities;
+  final String? bookingUrl;
 
   Hotel({
     required this.name,
@@ -13,29 +15,13 @@ class Hotel {
     required this.imageUrl,
     required this.price,
     required this.amenities,
+    this.bookingUrl,
   });
 }
 
-List<Hotel> hotels = [
-  Hotel(
-    name: "ABC Hotel",
-    location: "Street 14, ABC Nagar, Shimla",
-    imageUrl: "https://images.unsplash.com/photo-1561501900-3701fa6a0864?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", // Replace with actual image URL
-    price: 500,
-    amenities: ["2 Beds", "4 Guests", "Room Service"],
-  ),
-  Hotel(
-    name: "XYZ Hotel",
-    location: "MG Road, Manali",
-    imageUrl: "https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?q=80&w=2370&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    price: 450,
-    amenities: ["1 Bed", "2 Guests", "Free Breakfast"],
-  ),
-];
-
 Widget buildHotelCard(Hotel hotel) {
   return Container(
-    width: double.infinity, // Ensures it doesn't exceed parent width
+    width: double.infinity,
     child: Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
@@ -48,8 +34,13 @@ Widget buildHotelCard(Hotel hotel) {
             child: Image.network(
               hotel.imageUrl,
               height: 180,
-              width: double.infinity, // Ensures image fits inside the card
+              width: double.infinity,
               fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) => Container(
+                height: 180,
+                color: Colors.grey,
+                child: Center(child: Icon(Icons.broken_image)),
+              ),
             ),
           ),
           Padding(
@@ -57,15 +48,9 @@ Widget buildHotelCard(Hotel hotel) {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  hotel.name,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                Text(hotel.name, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 SizedBox(height: 4),
-                Text(
-                  hotel.location,
-                  style: TextStyle(color: Colors.grey[600]),
-                ),
+                Text(hotel.location, style: TextStyle(color: Colors.grey[600])),
                 SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -73,17 +58,15 @@ Widget buildHotelCard(Hotel hotel) {
                     Expanded(
                       child: Wrap(
                         spacing: 6,
-                        runSpacing: -4, // Adjust spacing for better fit
-                        children: hotel.amenities
-                            .map((amenity) => Chip(
+                        runSpacing: -4,
+                        children: hotel.amenities.map((amenity) => Chip(
                           label: Text(amenity),
                           backgroundColor: Colors.grey[200],
-                        ))
-                            .toList(),
+                        )).toList(),
                       ),
                     ),
                     Text(
-                      "\$${hotel.price}",
+                      "₹${hotel.price.toStringAsFixed(0)}",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -95,26 +78,35 @@ Widget buildHotelCard(Hotel hotel) {
               ],
             ),
           ),
+
+          // ✅ Booking button only if URL is available
+          if (hotel.bookingUrl != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.open_in_new),
+                  label: Text("View on Tripadvisor"),
+                  onPressed: () async {
+                    final url = Uri.parse(hotel.bookingUrl!);
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } else {
+                      debugPrint("Could not launch URL");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.teal,
+                    foregroundColor: Colors.white,
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  ),
+                ),
+              ),
+            ),
         ],
       ),
     ),
   );
-}
-
-class HotelListScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text("Hotels")),
-      backgroundColor: Colors.grey[200],
-      body: ListView.builder(
-        padding: EdgeInsets.all(16),
-        itemCount: hotels.length,
-        itemBuilder: (context, index) => Padding(
-          padding: EdgeInsets.only(bottom: 8), // Consistent spacing
-          child: buildHotelCard(hotels[index]),
-        ),
-      ),
-    );
-  }
 }

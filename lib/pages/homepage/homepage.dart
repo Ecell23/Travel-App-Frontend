@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import '../../widgets/bottom_nav.dart';
 import 'widgets/trip_form.dart';
+import 'widgets/popular_carousel.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -11,7 +12,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  List<List<dynamic>> services = [[Icons.hotel, 'Hotels'],[Icons.flight , 'Flights'],[Icons.train_outlined,'Trains'],[Icons.car_rental_outlined,'Cars']];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,42 +53,14 @@ class _HomepageState extends State<Homepage> {
               TripForm(),
               SizedBox(height: 5,),
               Text(
-                'Services',
+                'Popular Destinations',
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge
                     ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
               ),
-              Row(
-                spacing: 15,
-                children: List.generate(4, (index) => Expanded(
-                  child: GestureDetector(
-                    onTap: () {},
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.black12)
-                      ),
-                      //width: double.infinity,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8,horizontal: 8),
-                        child: Column(
-                          spacing: 5,
-                          children: [
-                            Icon(services[index][0],
-                              color:
-                              Theme.of(context).colorScheme.onSurface,),
-                            Text(services[index][1],
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                )),
-              )
+              SizedBox(height: 10),
+              PopularDestinationsCarousel(),
             ],
           ),
         ),

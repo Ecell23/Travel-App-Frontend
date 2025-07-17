@@ -20,7 +20,14 @@ class _MapsPageState extends State<MapsPage> {
   bool _isLoading = true;
   String? _selectedCategory;
   bool _disposed = false;
-  
+  TextEditingController _searchController = TextEditingController();
+  List<AutocompletePrediction> _predictions = [];
+  FocusNode _searchFocus = FocusNode();
+  bool _isSearchOpen = false;
+  double _searchBarWidth = 0;
+
+
+
   // Default position for Delhi, India if location is unavailable
   final LatLng _defaultPosition = LatLng(28.6139, 77.2090);
 
@@ -35,8 +42,48 @@ class _MapsPageState extends State<MapsPage> {
   void dispose() {
     _disposed = true;
     mapController?.dispose();
+    _searchController.dispose();
+    _searchFocus.dispose();
     super.dispose();
   }
+
+  void _onSearchChanged(String value) async {
+    if (value.isEmpty) {
+      _safeSetState(() => _predictions = []);
+      return;
+    }
+
+    var result = await googlePlace.autocomplete.get(value);
+    if (result != null && result.predictions != null) {
+      _safeSetState(() {
+        _predictions = result.predictions!;
+      });
+    }
+  }
+
+  Future<void> _selectPrediction(AutocompletePrediction prediction) async {
+    final details = await googlePlace.details.get(prediction.placeId!);
+    if (details != null && details.result != null && details.result!.geometry?.location != null) {
+      final loc = details.result!.geometry!.location!;
+      final LatLng position = LatLng(loc.lat!, loc.lng!);
+
+      mapController?.animateCamera(CameraUpdate.newLatLngZoom(position, 15));
+
+      final marker = Marker(
+        markerId: MarkerId(prediction.placeId!),
+        position: position,
+        infoWindow: InfoWindow(title: details.result!.name),
+      );
+
+      _safeSetState(() {
+        _markers.add(marker);
+        _predictions = [];
+        _searchController.clear();
+        _searchFocus.unfocus();
+      });
+    }
+  }
+
 
   // Safe setState that checks if the widget is still mounted
   void _safeSetState(VoidCallback fn) {
@@ -198,20 +245,86 @@ class _MapsPageState extends State<MapsPage> {
                   ),
                 ),
                 Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 40,
+                  top: 12,
+                  left: 12,
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 300),
+                    width: _isSearchOpen ? MediaQuery.of(context).size.width - 84 : 50,
+                    height: 50,
+                    curve: Curves.easeInOut,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Colors.white, Colors.white.withOpacity(0)],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 5,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(_isSearchOpen ? Icons.arrow_back : Icons.search),
+                          onPressed: () {
+                            setState(() {
+                              if (_isSearchOpen) {
+                                _searchController.clear();
+                                _predictions.clear();
+                                _searchFocus.unfocus();
+                              }
+                              _isSearchOpen = !_isSearchOpen;
+                              if (_isSearchOpen) {
+                                Future.delayed(Duration(milliseconds: 300), () {
+                                  _searchFocus.requestFocus();
+                                });
+                              }
+                            });
+                          },
+                        ),
+                        if (_isSearchOpen)
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              focusNode: _searchFocus,
+                              onChanged: _onSearchChanged,
+                              decoration: InputDecoration(
+                                hintText: 'Search place...',
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
+                if (_isSearchOpen && _predictions.isNotEmpty)
+                  Positioned(
+                    top: 65,
+                    left: 12,
+                    right: 12,
+                    child: Material(
+                      elevation: 5,
+                      borderRadius: BorderRadius.circular(10),
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: _predictions.length,
+                        itemBuilder: (context, index) {
+                          final prediction = _predictions[index];
+                          return ListTile(
+                            title: Text(prediction.description ?? ''),
+                            onTap: () {
+                              _selectPrediction(prediction);
+                              setState(() {
+                                _isSearchOpen = false;
+                              });
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                 Positioned(
                   bottom: 0,
                   left: 0,

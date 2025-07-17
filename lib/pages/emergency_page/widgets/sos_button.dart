@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:travel_app/pages/emergency_page/utils/utils.dart'; // Adjust the import path according to your folder structure
+import 'package:travel_app/pages/emergency_page/utils/utils.dart'; // Adjust if needed
 
-class SOSButtonWidget extends StatelessWidget {
+class SOSButtonWidget extends StatefulWidget {
   final List<String> emergencyContacts;
 
   SOSButtonWidget({required this.emergencyContacts});
 
+  @override
+  State<SOSButtonWidget> createState() => _SOSButtonWidgetState();
+}
+
+class _SOSButtonWidgetState extends State<SOSButtonWidget> {
+  bool isPoliceSelected = true;
+
   void onSOSPressed(BuildContext context) async {
     try {
-      // Request permissions and proceed only if granted
       bool permissionsGranted = await requestPermissions();
       if (!permissionsGranted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -17,20 +23,16 @@ class SOSButtonWidget extends StatelessWidget {
         return;
       }
 
-      // Flags to check if both SMS and Police call succeed
-      bool smsSuccess = false;
-      bool policeCallSuccess = false;
+      bool smsSuccess = await sendEmergencySMS(context, widget.emergencyContacts);
 
-      // Attempt to send Emergency SMS
-      smsSuccess = await sendEmergencySMS(context, emergencyContacts);
+      // Change number based on selection
+      String emergencyNumber = isPoliceSelected ? '100' : '102'; // Police or Ambulance
 
-      // Attempt to call Police
-      policeCallSuccess = await callPolice(context);
+      bool callSuccess = await callEmergency(context, emergencyNumber);
 
-      // Show success message if both operations succeed
-      if (smsSuccess && policeCallSuccess) {
+      if (smsSuccess && callSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Emergency SMS sent and police called successfully!')),
+          SnackBar(content: Text('SOS: ${isPoliceSelected ? "Police" : "Ambulance"} contacted successfully!')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -39,54 +41,93 @@ class SOSButtonWidget extends StatelessWidget {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to send SOS or call police.')),
+        SnackBar(content: Text('Failed to send SOS or call emergency services.')),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onSOSPressed(context),
-      child: Container(
-        width: 150,
-        height: 150,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          gradient: LinearGradient(
-            colors: [Colors.orange.shade400, Colors.deepOrange],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.deepOrange.withOpacity(0.4),
-              spreadRadius: 5,
-              blurRadius: 15,
-            ),
-          ],
-        ),
-        child: Center(
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () => onSOSPressed(context),
           child: Container(
-            width: 110,
-            height: 110,
+            width: 150,
+            height: 150,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white,
+              gradient: LinearGradient(
+                colors: [Colors.orange.shade400, Colors.deepOrange],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.deepOrange.withOpacity(0.4),
+                  spreadRadius: 5,
+                  blurRadius: 15,
+                ),
+              ],
             ),
             child: Center(
-              child: Text(
-                'SOS',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepOrange,
+              child: Container(
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: Text(
+                    'SOS',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      ),
+        SizedBox(height: 20),
+        ToggleButtons(
+          isSelected: [isPoliceSelected, !isPoliceSelected],
+          borderRadius: BorderRadius.circular(20),
+          selectedColor: Colors.white,
+          fillColor: isPoliceSelected ? Theme.of(context).colorScheme.primary : Colors.red.shade800,
+          color: Colors.black87,
+          onPressed: (index) {
+            setState(() {
+              isPoliceSelected = index == 0;
+            });
+          },
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Icon(Icons.local_police_outlined),
+                  SizedBox(width: 6),
+                  Text('Police'),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Icon(Icons.local_hospital_outlined),
+                  SizedBox(width: 6),
+                  Text('Ambulance'),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

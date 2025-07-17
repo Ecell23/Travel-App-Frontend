@@ -87,7 +87,7 @@ class _BookingPageState extends State<BookingPage> {
     });
 
     final url = Uri.parse(
-        'http://192.168.1.5:3000/api/hotels/searchByGeoId?geoId=$geoId&checkIn=$checkIn&checkOut=$checkOut');
+        'https://travel-app-premansh.fly.dev/api/hotels/searchByGeoId?geoId=$geoId&checkIn=$checkIn&checkOut=$checkOut');
 
     try {
       final response = await http.get(url);
@@ -355,19 +355,17 @@ class _BookingPageState extends State<BookingPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildCategoryButtons(),
-                  SizedBox(height: 20),
                   Text("Filter By", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 10),
                   _buildFilterSection(),
                   SizedBox(height: 12),
                   Center(
                     child: ElevatedButton.icon(
-                      icon: Icon(Icons.search),
+                        icon: Icon(Icons.search, color: Theme.of(context).colorScheme.onSurface),
                       label: Text('Search Hotels'),
                       onPressed: _onSearchPressed,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.teal,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         foregroundColor: Colors.white,
                         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                       ),
@@ -443,37 +441,6 @@ class _BookingPageState extends State<BookingPage> {
     locationFocusNode.dispose();
     cityController.dispose();
     super.dispose();
-  }
-
-
-  Widget _buildCategoryButtons() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: ['Hotel', 'Flight', 'Train', 'Car'].map((text) {
-        bool isSelected = selectedCategory == text;
-        return GestureDetector(
-          onTap: () => setState(() => selectedCategory = text),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-            decoration: BoxDecoration(
-              color: isSelected ? Color.fromRGBO(24, 192, 193, 0.4) : Colors.white,
-              border: Border.all(
-                color: isSelected ? Color.fromRGBO(24, 192, 193, 0.7) : Colors.grey.shade300,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Text(
-              text,
-              style: TextStyle(
-                color: Colors.black54,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        );
-      }).toList(),
-    );
   }
 
   Widget _buildFilterButton(IconData icon, String text, {VoidCallback? onTap}) {

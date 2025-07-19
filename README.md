@@ -1,6 +1,8 @@
 <div align="center">
 
-<h1>🗺️ PlanIt – Your All in One Travel Companion</h1>
+<img src="screenshots/planit_logo.png" alt="PlanIt Logo" width="320"/>
+
+<h1>PlanIt – Your All-in-One Travel Companion</h1>
 
 <p>
 Cross-platform travel planning & hotel booking app made with ❤️ by students of NIT Silchar.
@@ -12,7 +14,6 @@ Cross-platform travel planning & hotel booking app made with ❤️ by students 
 <a href="#-setup-instructions">Installation</a> •
 <a href="#-collaborators">Collaborators</a>
 
-</div>
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)](https://flutter.dev)
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green?logo=node.js)](https://nodejs.org)
@@ -24,6 +25,9 @@ Cross-platform travel planning & hotel booking app made with ❤️ by students 
 [![MIT License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
+
+
+</div >
 
 ## 🌐 Overview
 

@@ -6,10 +6,11 @@ import 'package:travel_app/widgets/custom_background/custom_background.dart';
 import 'package:http/http.dart' as http;
 
 import '../../config/constants.dart';
-import '../../models/user.dart';
 import '../../providers/auth_provider.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -230,29 +231,29 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 16), // Space between buttons
-                    // Skip For Now Button
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamedAndRemoveUntil(context, '/homepage',(Route<dynamic> route) => false);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.orange.withOpacity(0.7),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 16.0),
-                        ),
-                        child: Text(
-                          'SKIP FOR NOW',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ),
+                    // SizedBox(width: 16), // Space between buttons
+                    // // Skip For Now Button
+                    // Expanded(
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       Navigator.pushNamedAndRemoveUntil(context, '/homepage',(Route<dynamic> route) => false);
+                    //     },
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: Colors.orange.withOpacity(0.7),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(20.0),
+                    //       ),
+                    //       padding: EdgeInsets.symmetric(vertical: 16.0),
+                    //     ),
+                    //     child: Text(
+                    //       'SKIP FOR NOW',
+                    //       style: TextStyle(
+                    //         color: Colors.white,
+                    //         fontWeight: FontWeight.bold,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
                 SizedBox(height: 20), // Space below buttons

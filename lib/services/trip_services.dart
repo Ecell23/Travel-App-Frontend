@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
 import 'package:travel_app/models/place_model.dart';
 import 'package:travel_app/models/trip.dart';
 import 'package:travel_app/providers/auth_provider.dart';
@@ -28,6 +26,7 @@ class TripService {
         },
       );
       if(res.statusCode!=201){
+        print(res.body);
         throw Exception('Error ${res.statusCode} : ${res.body}');
       }
     } catch(e) {

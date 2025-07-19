@@ -5,10 +5,10 @@ class ErrorDisplayWidget extends StatelessWidget {
   final VoidCallback onRefresh;
 
   const ErrorDisplayWidget({
-    Key? key,
+    super.key,
     required this.errorMessage,
     required this.onRefresh,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

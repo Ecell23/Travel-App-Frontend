@@ -5,10 +5,10 @@ import 'package:travel_app/config/constants.dart';
 import 'package:travel_app/models/place_model.dart';
 import 'package:travel_app/models/trip.dart';
 import 'package:travel_app/pages/attractions_page/attractions_page.dart';
-import 'package:travel_app/pages/live_trip_page/widgets/safety_board_widget.dart';
 import 'package:travel_app/providers/auth_provider.dart';
 import 'package:travel_app/services/trip_services.dart';
 import 'package:travel_app/pages/bookings_page/bookings_page.dart';
+import 'package:travel_app/pages/emergency_page/emergency_page.dart';
 
 class TripDetailsPage extends StatefulWidget {
   final Trip trip;
@@ -55,7 +55,6 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
     final theme = Theme.of(context);
     
     return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
         title: Text(
           'Trip to ${_places[1].placeName}',
@@ -63,7 +62,7 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
             color: theme.colorScheme.onSurface,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         elevation: 0,
         iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         actions: [
@@ -73,7 +72,7 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
               margin: const EdgeInsets.only(right: 16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surface,
+                color: Colors.grey.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Row(
@@ -110,14 +109,34 @@ class _TripDetailsPageState extends State<TripDetailsPage> {
             const SizedBox(height: 16),
             _buildLocationsList(),
             const SizedBox(height: 24),
-            Text(
-              "Safety Board",
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: theme.colorScheme.onSurface,
+            // Safety Settings Tile replacing Safety Board
+            Container(
+              decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+              child: ListTile(
+                leading: Icon(Icons.security, color: theme.colorScheme.primary),
+                title: Text("Safety Settings"),
+                trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => EmergencyContactPage()),
+                  );
+                },
               ),
             ),
-            const SizedBox(height: 16),
-            const SafetyBoardWidget(),
+            // Removed: Safety Board section
+            // const SizedBox(height: 16),
+            // const SafetyBoardWidget(),
           ],
         ),
       ),
@@ -218,7 +237,7 @@ class _LocationCardState extends State<_LocationCard> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -370,7 +389,7 @@ class _LocationCardState extends State<_LocationCard> {
                       height: 140,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
+                        color: Colors.grey.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: Colors.grey.shade200,
@@ -453,7 +472,7 @@ class _LocationCardState extends State<_LocationCard> {
                       height: 140,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade50,
+                        color: Colors.grey.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
                           color: Colors.grey.shade200,
@@ -547,7 +566,7 @@ class _HotelCard extends StatelessWidget {
       width: 200,
       margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -626,7 +645,7 @@ class _AttractionCard extends StatelessWidget {
       width: 200,
       margin: const EdgeInsets.only(right: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class CustomBackground extends StatelessWidget {
   final Widget child; // The content that will be displayed inside the custom background
 
-  const CustomBackground({required this.child});
+  const CustomBackground({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

@@ -41,7 +41,7 @@ class PlaceModel {
       'latitude': latitude,
       'longitude': longitude,
       'attractions': attractions?.map((e) => e.toJson()).toList(),
-      'hotels': hotels?.map((e) => e.toJson()).toList(),
+      //'hotels': hotels?.map((e) => e.toJson()).toList(),
     };
   }
 }

@@ -1,5 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
-import 'package:google_place/google_place.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:travel_app/models/place_model.dart';
@@ -47,7 +48,7 @@ class _TripFormState extends State<TripForm> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -67,7 +68,6 @@ class _TripFormState extends State<TripForm> {
                     onTap: () async {
                       PlaceModel? result = await Navigator.pushNamed(context, '/searchPage') as PlaceModel?;
                       if(result!=null){
-                        print(result.toJson());
                         setState(() {
                           locations[index] = result;
                         });
@@ -75,7 +75,7 @@ class _TripFormState extends State<TripForm> {
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.surface,
+                          color: Colors.grey.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: Colors.black12)
                       ),
@@ -93,7 +93,7 @@ class _TripFormState extends State<TripForm> {
                                   Text(index==0? "FROM" : "LOCATION $index",
                                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSecondary),
                                   ),
-                                  Text(locations[index].placeName??'',
+                                  Text(locations[index].placeName,
                                   overflow: TextOverflow.ellipsis,
                                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.onSurface),
                                   ),
@@ -195,7 +195,6 @@ class _TripFormState extends State<TripForm> {
                     onPressed: () async {
                       PlaceModel? result = await Navigator.pushNamed(context, '/searchPage') as PlaceModel?;
                       if(result!=null){
-                        print(result.toJson());
                         setState(() {
                           locations.add(result);
                         });
@@ -218,7 +217,7 @@ class _TripFormState extends State<TripForm> {
                       onTap: () => _selectDate(context),
                       child: Container(
                         decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
+                            color: Colors.grey.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: Colors.black12)
                         ),
@@ -255,7 +254,7 @@ class _TripFormState extends State<TripForm> {
                       onTap: (){},
                       child: Container(
                         decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
+                            color: Colors.grey.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(color: Colors.black12)
                         ),
@@ -327,7 +326,6 @@ class _TripFormState extends State<TripForm> {
                           "startDate":selectedDate.toIso8601String(),
                           "guests":guestCount,
                         };
-                        print(reqBody);
                         await tripService.postTrip(reqBody);
                         if(context.mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.green,content: Text("Trip Created Successfully!")));
                         setState(() {

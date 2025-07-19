@@ -1,10 +1,12 @@
+// ignore_for_file: use_build_context_synchronously, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:travel_app/pages/emergency_page/utils/utils.dart'; // Adjust if needed
 
 class SOSButtonWidget extends StatefulWidget {
   final List<String> emergencyContacts;
 
-  SOSButtonWidget({required this.emergencyContacts});
+  const SOSButtonWidget({super.key, required this.emergencyContacts});
 
   @override
   State<SOSButtonWidget> createState() => _SOSButtonWidgetState();
@@ -92,13 +94,14 @@ class _SOSButtonWidgetState extends State<SOSButtonWidget> {
             ),
           ),
         ),
-        SizedBox(height: 20),
+        SizedBox(height: 30),
         ToggleButtons(
           isSelected: [isPoliceSelected, !isPoliceSelected],
           borderRadius: BorderRadius.circular(20),
           selectedColor: Colors.white,
+          color: Theme.of(context).colorScheme.onSurface,
           fillColor: isPoliceSelected ? Theme.of(context).colorScheme.primary : Colors.red.shade800,
-          color: Colors.black87,
+          //color: Colors.black87,
           onPressed: (index) {
             setState(() {
               isPoliceSelected = index == 0;

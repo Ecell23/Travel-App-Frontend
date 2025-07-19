@@ -4,6 +4,7 @@ import '../../models/user.dart';
 import '../emergency_page/emergency_page.dart';
 import '../../providers/auth_provider.dart';
 import 'package:provider/provider.dart';
+import '../../main.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -13,7 +14,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool isDarkMode = false;
   bool isEditing = false;
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
@@ -268,7 +268,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               SizedBox(height: 30),
               Card(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -291,11 +291,10 @@ class _ProfilePageState extends State<ProfilePage> {
                       SwitchListTile(
                         secondary: Icon(Icons.dark_mode_outlined, color: Theme.of(context).colorScheme.primary),
                         title: Text("Dark Mode"),
-                        value: isDarkMode,
+                        value: Provider.of<ThemeProvider>(context).themeMode == ThemeMode.dark,
                         onChanged: (value) {
-                          setState(() {
-                            isDarkMode = value;
-                          });
+                          Provider.of<ThemeProvider>(context, listen: false).setDarkMode(value);
+                          print('ok');
                         },
                       ),
                       Divider(),

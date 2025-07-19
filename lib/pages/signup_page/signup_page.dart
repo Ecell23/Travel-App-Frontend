@@ -6,10 +6,11 @@ import 'package:travel_app/widgets/custom_background/custom_background.dart';
 import 'package:http/http.dart' as http;
 
 import '../../config/constants.dart';
-import '../../models/user.dart';
 import '../../providers/auth_provider.dart';
 
 class SignupPage extends StatefulWidget {
+  const SignupPage({super.key});
+
   @override
   _SignupPageState createState() => _SignupPageState();
 }

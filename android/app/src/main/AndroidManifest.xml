@@ -14,7 +14,7 @@
     <uses-feature android:name="android.hardware.telephony" android:required="false"/>
 
     <application
-        android:label="travel_app"
+        android:label="Planit"
         android:icon="@mipmap/ic_launcher">
 
 

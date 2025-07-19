@@ -5,10 +5,10 @@ class EmptyDisplayWidget extends StatelessWidget {
   final VoidCallback onRefresh;
 
   const EmptyDisplayWidget({
-    Key? key,
+    super.key,
     required this.message,
     required this.onRefresh,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

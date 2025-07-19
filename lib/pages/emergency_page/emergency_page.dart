@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:travel_app/pages/emergency_page/widgets/add_contact_button.dart';
 import 'package:travel_app/pages/emergency_page/widgets/sos_button.dart';
@@ -6,6 +8,8 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 
 class EmergencyContactPage extends StatefulWidget {
+  const EmergencyContactPage({super.key});
+
   @override
   _EmergencyContactPageState createState() => _EmergencyContactPageState();
 }
@@ -101,7 +105,6 @@ class _EmergencyContactPageState extends State<EmergencyContactPage> {
         title: Text('Safety Settings'),
         backgroundColor: colorScheme.surface,
       ),
-      backgroundColor: colorScheme.surface,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -112,7 +115,7 @@ class _EmergencyContactPageState extends State<EmergencyContactPage> {
                 child: Container(
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(

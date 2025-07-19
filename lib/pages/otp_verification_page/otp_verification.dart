@@ -7,6 +7,8 @@ import 'package:travel_app/widgets/custom_background/custom_background.dart';
 import '../../config/constants.dart';
 
 class OtpverificationPage extends StatefulWidget {
+  const OtpverificationPage({super.key});
+
   @override
   State<OtpverificationPage> createState() => _OtpverificationPageState();
 }
@@ -47,7 +49,6 @@ class _OtpverificationPageState extends State<OtpverificationPage> {
         if(res.statusCode==200){
           if(jsonDecode(res.body)["valid"]) {
             String? token = res.headers["x-pwdreset-token"];
-            print(token);
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("OTP verified")));
             Navigator.of(context).pushNamedAndRemoveUntil('/resetPasswordPage', ModalRoute.withName('/login'),arguments: token);
           } else{
@@ -62,7 +63,6 @@ class _OtpverificationPageState extends State<OtpverificationPage> {
         }
       }
       catch(e){
-        print(e);
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Connection Failed")));
       }
 

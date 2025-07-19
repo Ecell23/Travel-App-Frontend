@@ -20,7 +20,7 @@ class Hotel {
 }
 
 Widget buildHotelCard(Hotel hotel) {
-  return Container(
+  return SizedBox(
     width: double.infinity,
     child: Card(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),

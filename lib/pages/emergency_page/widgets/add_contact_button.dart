@@ -1,10 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 class AddContactWidget extends StatelessWidget {
   final Future<bool> Function(String) onAddContact;
   final bool isLoading;
 
-  AddContactWidget({
+  const AddContactWidget({super.key, 
     required this.onAddContact, 
     this.isLoading = false,
   });

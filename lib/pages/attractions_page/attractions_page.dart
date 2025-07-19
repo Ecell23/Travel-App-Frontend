@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:travel_app/models/place_model.dart';
 import 'package:google_place/google_place.dart';
@@ -37,7 +39,7 @@ class NearbyAttractionsPage extends StatelessWidget {
 }
 
 class _NearbyAttractionsView extends StatefulWidget {
-  const _NearbyAttractionsView({Key? key}) : super(key: key);
+  const _NearbyAttractionsView();
 
   @override
   State<_NearbyAttractionsView> createState() => _NearbyAttractionsViewState();
@@ -57,14 +59,14 @@ class _NearbyAttractionsViewState extends State<_NearbyAttractionsView> {
     final provider = Provider.of<AttractionsProvider>(context);
     final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor:  Theme.of(context).colorScheme.surface,
       appBar: AppBar(
         toolbarHeight: 65,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              '${provider.place.placeName}',
+              provider.place.placeName,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: theme.colorScheme.onSurface,
               ),
@@ -77,7 +79,6 @@ class _NearbyAttractionsViewState extends State<_NearbyAttractionsView> {
             ),
           ],
         ),
-        backgroundColor: Colors.white,
         iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         elevation: 0,
       ),
@@ -157,7 +158,7 @@ class _NearbyAttractionsViewState extends State<_NearbyAttractionsView> {
                             itemCount: provider.attractions!.length,
                             separatorBuilder: (_, __) => Container(
                               height: 18,
-                              color: Colors.grey.shade200,
+                              color: Colors.grey.withOpacity(0.2),
                             ),
                             itemBuilder: (context, index) {
                               final attraction = provider.attractions![index];
@@ -241,7 +242,7 @@ class _AttractionTileState extends State<_AttractionTile> {
     final todayHours = _getCurrentDayOpeningHours();
     
     return Container(
-      color: Colors.white,
+      color:  Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

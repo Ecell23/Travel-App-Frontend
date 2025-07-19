@@ -44,7 +44,7 @@ class _TripTileState extends State<TripTile> {
       child: Container(
         height: MediaQuery.sizeOf(context).width * 0.75,
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -166,6 +166,7 @@ class _TripTileState extends State<TripTile> {
                 ),
               ),
             ),
+            SizedBox(height: 16,),
             // Footer Section
             Container(
               padding: EdgeInsets.all(10),

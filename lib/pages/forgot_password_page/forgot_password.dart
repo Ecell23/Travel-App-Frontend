@@ -5,9 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:travel_app/widgets/custom_background/custom_background.dart';
 
 import '../../config/constants.dart';
-import '../../models/user.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
+
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }

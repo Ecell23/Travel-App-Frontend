@@ -16,9 +16,9 @@ class AttractionsProvider extends ChangeNotifier {
   bool _loading = true;
   String? _error;
   Set<String> _savedAttractions = {};
-  Map<String, List<String>> _attractionImages = {};
-  Map<String, bool> _loadingAdditionalImages = {};
-  Map<String, List<String>?> _attractionOpeningHours = {};
+  final Map<String, List<String>> _attractionImages = {};
+  final Map<String, bool> _loadingAdditionalImages = {};
+  final Map<String, List<String>?> _attractionOpeningHours = {};
 
   List<SearchResult>? get attractions => _attractions;
   bool get loading => _loading;

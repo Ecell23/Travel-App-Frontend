@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -13,12 +15,12 @@ class BookingPage extends StatefulWidget {
   final int? prefillAdults;
 
   const BookingPage({
-    Key? key,
+    super.key,
     this.prefillLocation,
     this.prefillStartDate,
     this.prefillEndDate,
     this.prefillAdults,
-  }) : super(key: key);
+  });
 
   @override
   _BookingPageState createState() => _BookingPageState();
@@ -215,8 +217,14 @@ class _BookingPageState extends State<BookingPage> {
     return Container(
       padding: EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.1),
+            blurRadius: 7,
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -228,12 +236,12 @@ class _BookingPageState extends State<BookingPage> {
                   margin: EdgeInsets.symmetric(horizontal: 4),
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: Colors.grey.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.location_on, size: 18, color: Colors.black54),
+                      Icon(Icons.location_on, size: 18),
                       SizedBox(width: 6),
                       Expanded(
                         child: TextField(
@@ -336,10 +344,9 @@ class _BookingPageState extends State<BookingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      //backgroundColor: Colors.grey[200],
       appBar: AppBar(
         title: Text('Bookings', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.white,
         elevation: 0,
       ),
     body: GestureDetector(
@@ -451,13 +458,13 @@ class _BookingPageState extends State<BookingPage> {
           padding: EdgeInsets.symmetric(vertical: 12),
           margin: EdgeInsets.symmetric(horizontal: 4),
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: Colors.grey.withOpacity(0.1),
             borderRadius: BorderRadius.circular(16),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, size: 18, color: Colors.black54),
+              Icon(icon, size: 18),
               SizedBox(width: 6),
               Flexible(child: Text(text, style: TextStyle(fontSize: 14), overflow: TextOverflow.ellipsis)),
             ],

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:travel_app/pages/welcome_page/welcome_page.dart';
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Show the splash screen for 3 seconds before navigating

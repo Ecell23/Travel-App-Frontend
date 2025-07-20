@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="screenshots/planit_logo.png" alt="PlanIt Logo" width="320"/>
+<img src="screenshots/app_logo.png" alt="PlanIt Logo" width="320"/>
 
 <h1>PlanIt – Your All-in-One Travel Companion</h1>
 
@@ -108,8 +108,6 @@ PlanIt is a cross-platform, full-stack travel assistant app built with Flutter a
 <td><img src="screenshots/profileandsafety1.jpg" width="220"/></td>
 <td><img src="screenshots/profileandsafety2.jpg" width="220"/></td>
 </tr></table>
-
-> 📂 Want to view them all at once? Download the full screenshots PDF from this repo!
 
 ---
 
